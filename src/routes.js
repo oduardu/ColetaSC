@@ -7,11 +7,14 @@ const { Navigator, Screen } = createStackNavigator()
 
 import PrincipalScreen from './screens/PrincipalScreen'
 import LoginEmpresa from './screens/LoginEmpresa'
+import RegistroEmpresa from './screens/RegistroEmpresa'
+import EsqueciSenha from './screens/EsqueciSenha'
 
 export default function Routes() {
     return (
         <NavigationContainer>
-            <Navigator screenOptions={{ headerShown: false, cardStyle: {backgroundColor: '#f2f3f5'} }}>
+            <Navigator 
+            screenOptions={{ headerShown: false, cardStyle: {backgroundColor: '#f2f3f5'} }}>
                 <Screen 
                   name="PrincipalScreen" 
                   component={PrincipalScreen}
@@ -19,6 +22,14 @@ export default function Routes() {
                 <Screen 
                   name="LoginEmpresa" 
                   component={LoginEmpresa}
+                />
+                <Screen 
+                  name="RegistroEmpresa" 
+                  component={RegistroEmpresa}
+                />
+                <Screen 
+                  name="EsqueciSenha" 
+                  component={EsqueciSenha}
                 />
             </Navigator>
         </NavigationContainer>
