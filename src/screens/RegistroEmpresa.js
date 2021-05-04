@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, SafeAreaView, KeyboardAvoidingView, StyleSheet, TextInput, Image} from 'react-native'
-import { Button } from 'react-native-paper';
+import { View, StyleSheet, Image} from 'react-native'
+import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 export default function EsqueciSenha() {
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.4,
         borderColor: '#d3e2e6',
         borderRadius: 20,
-        height: 56,
+        height: 26,
         paddingVertical: 18,
         paddingHorizontal: 24,
         marginBottom: 16,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.4,
         borderColor: '#d3e2e6',
         borderRadius: 20,
-        height: 56,
+        height: 26,
         paddingVertical: 18,
         paddingHorizontal: 24,
         marginBottom: 16,

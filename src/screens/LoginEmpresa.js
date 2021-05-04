@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Image} from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, Text, View, ScrollView, Image} from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 export default function LoginEmpresa() {
@@ -16,6 +16,7 @@ export default function LoginEmpresa() {
   }
 
     return (
+      <ScrollView>
         <View style={styles.container}>
            <Image style={styles.logo} source={require('../../assets/logo.png')}
            />
@@ -62,6 +63,7 @@ export default function LoginEmpresa() {
            </View>
 
         </View>
+      </ScrollView>
     )
 }
 
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.4,
         borderColor: '#d3e2e6',
         borderRadius: 20,
-        height: 56,
+        height: 26,
         paddingVertical: 18,
         paddingHorizontal: 24,
         marginBottom: 16,
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.4,
         borderColor: '#d3e2e6',
         borderRadius: 20,
-        height: 56,
+        height: 26,
         paddingVertical: 18,
         paddingHorizontal: 24,
         marginBottom: 16,
