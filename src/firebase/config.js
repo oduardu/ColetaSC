@@ -1,11 +1,10 @@
 const FirebaseKey = {
-    apiKey: "AIzaSyBCWMPUVemqOVkjhkVILzBUh5BFAYSuRTU",
+    apiKey: "AIzaSyA5MO-8OhIgudwgdeaIJB-YT4laoSGJotw",
     authDomain: "coleta-sc-77e99.firebaseapp.com",
-    databaseURL: "https://coleta-sc-77e99-default-rtdb.firebaseio.com/",
+    databaseURL: "https://coleta-sc-77e99-default-rtdb.firebaseio.com",
     projectId: "coleta-sc-77e99",
     storageBucket: "coleta-sc-77e99.appspot.com",
     messagingSenderId: "666493876031",
-    appId: "1:666493876031:android:ab00b6d7859b770899058a"
+    appId: "1:666493876031:web:6eedb94524702fd699058a"
   };
   
-  export default FirebaseKey;

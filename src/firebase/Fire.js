@@ -1,5 +1,5 @@
-import FirebaseKey from "./config"          
-import firebase from "firebase"
+import FirebaseKey from "./Config";
+import firebase from "firebase";
 //import firestore from "firebase/firestore";
 
 class Fire {

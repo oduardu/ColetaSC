@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image} from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import { TextInputMask } from "react-native-masked-text";
 import { useNavigation } from '@react-navigation/native';
 
-export default function LoginEmpresa() {
+export default function LoginEmpresa() { 
 
   const navigation = useNavigation()
 
@@ -26,6 +27,11 @@ export default function LoginEmpresa() {
            style={styles.firstInput} 
            placeholder={'Insira seu CNPJ'}
            keyboardType="numeric"
+           render={(props) => (
+            <TextInputMask
+            {...props}
+            type={"cnpj"}
+            />)}
            >
         
            </TextInput>
