@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
       },
 
       logo: {
-        width: 300,
-        height: 300
+        width: 350,
+        height: 150
       },
 
       firstInput: {

@@ -1,4 +1,4 @@
-import FirebaseKey from "./Config";
+/*import FirebaseKey from "./config";
 import firebase from "firebase";
 //import firestore from "firebase/firestore";
 
@@ -109,112 +109,6 @@ class Fire {
     };
     //############ Fim CRUD sem Imagens ############
 
-    //############ CRUD com Imagens ############
-    saveWithImagens = async (entidade, dataForm, images) => {
-        var urlImg = [];
-        var refItem = entidade; //nomeEntidade
-        var KeyRef = "";
-        try {
-            //salva a primeira vez
-            if (dataForm.id === null) {
-                KeyRef = await this.save(refItem, dataForm);
-            } else {
-                //editar o formm
-                dataForm.images = [];
-                KeyRef = dataForm.id;
-
-                //deleta as imagens associadas a entidade
-                for (let i = 0; i < dataForm.length; i++) {
-                    console.log(dataForm.images[i]);
-                    await this.storage().child(dataForm.images[i].path).delete();
-                }
-            }
-
-            //faz o upload das imagens
-            if (images.length !== null) {
-                for (let i = 0; i < images.length; i++) {
-                    urlImg.push(
-                        await this.uploadImage(
-                            images[i].uri,
-                            dataForm.tipo,
-                            KeyRef + "_" + i
-                        )
-                    );
-                }
-            }
-            //add novo atributo ao objeto do form com as urls finais das imagens
-            dataForm.images = urlImg;
-
-            //atualiza o objeto do form com o array das imagens
-            this.update(refItem, dataForm, KeyRef);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    removeWithFiles = async (refName, key) => {
-        // Deleta arquivos de imagens que estão associados a entidade
-        this.removeFileImage(refName, key);
-
-        //remove os registros da entidade
-        await this.db(refName + "/" + key) //passa a referencia da entidade e concatena com o id a ser removido
-            .remove()
-            .then(() => {
-                console.log("Removido..");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
-    removeFileImage = async (refName, key) => {
-        //cria uma variavel com a referencia do nome da entidade e o id
-        const ref = this.db(refName + "/" + key);
-
-        await ref
-            .once("value")
-            .then((snapshot) => {
-                //percorre o vetor com a qtd de itens a serem removidos
-                for (let i = 0; i < snapshot.val().images.length; i++) {
-                    console.log(snapshot.val().images[i].path);
-                    this.storage()
-                        .child(snapshot.val().images[i].path) //passa o destino das imagens que serão removidas
-                        .delete();
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-    //############ fim CRUD com Imagens ############
-
-    //############ Upload Imagens ############
-    uploadImage = async (uri, tipoImagem, id) => {
-        //o fetch API fornece uma interface para buscar recursos como sistemas externos
-        const responde = await fetch(uri);
-        //representa um objeto do tipo arquivo referente a imagem que será salva
-        const blob = await responde.blob(uri);
-        //cria a url da imagem que será salva no firebase
-        let path = "images/" + tipoImagem + "/" + id + ".jpg";
-
-        return new Promise((res, rej) => {
-            this.storage()
-                .child(path) //passa a url onde será salvo a imagem
-                .put(blob) // passa o arquivo que será salvo
-                .then(function (snapshot) {
-                    snapshot.ref.getDownloadURL().then(function (downloadUrl) {
-                        //retorna um objeto com a url do arquivo e o endereço onde está a imagem
-                        res({uri: downloadUrl, path: path});
-                    });
-                })
-                .catch((error) => {
-                    rej(error);
-                });
-        });
-    };
-
-    //############ Fim Upload Imagens ############
-
     firestore() {
         return firebase.firestore();
     }
@@ -234,11 +128,12 @@ class Fire {
 
     timestemp() {
         //retorna a data atual
-        return Date.now();
+        return Date.now()
     }
 }
 
 //cria o objeto da classe Fire
-Fire = new Fire();
+Fire = new Fire()
 //exporta o objeto Fire para ficar visivel aos demais arquivos do projeto
-export default Fire;
+export default Fire
+*/

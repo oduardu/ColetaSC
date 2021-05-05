@@ -1,55 +1,72 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import { View, ScrollView, StyleSheet, Image} from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
-import { TextInputMask } from "react-native-masked-text";
+import { TextInputMask } from "react-native-masked-text"
 import { useNavigation } from '@react-navigation/native'
-import Fire from "../firebase/Fire.js"
+import * as firebase from 'firebase'
 
-export default class RegistroEmpresa extends Component {
+ var firebaseConfig = {
+  apiKey: "AIzaSyA5MO-8OhIgudwgdeaIJB-YT4laoSGJotw",
+  authDomain: "coleta-sc-77e99.firebaseapp.com",
+  databaseURL: "https://coleta-sc-77e99-default-rtdb.firebaseio.com",
+  projectId: "coleta-sc-77e99",
+  storageBucket: "coleta-sc-77e99.appspot.com",
+  messagingSenderId: "666493876031",
+  appId: "1:666493876031:web:6eedb94524702fd699058a",
+  measurementId: "G-SXN4360DY2"
+}
 
-  constructor(props){
-    super(props);
+try {
+  firebase.initializeApp(firebaseConfig)
+} catch(e) {
+  console.log("App recarregou")
+}
+
+export default class RegistroEmpresa extends React.Component {
+
+  constructor (props) {
+    super(props)
     this.state = {
-        entidade: "empresa",
-        id: null,
-        nomeEmpresa: "",
-        cnpjEmpresa: "",
-        emailEmpresa: "",
-        open: false,
-    };
-  
-    this.tipoList = [
-        {label: "Padrão", value: "padrao"},
-        {label: "Administrador", value: "administrador"},
-        {label: "Convidado", value: "convidado"},
-    ];
-  }
-
-  salvar = () => {
-    try {
-        let label = "";
-        let objItens = {
-            id: this.state.id,
-            nomeEmpresa: this.state.nome,
-            cnpjEmpresa: this.state.cnpj,
-            emailEmpresa: this.state.email
-        };
-  
-        if (objItens.id === null) {
-            Fire.save(this.state.entidade, objItens);
-            label = "inserido";
-        } else {
-            Fire.update(this.state.entidade, objItens, objItens.id);
-            label = "atualizado";
-        }
-  
-        Alert.alert("Informação", "Registro " + label + " com sucesso!");
-  
-        this.props.navigation.navigate("UsuarioList");
-    } catch (error) {
-        console.log(error.message);
+      arrayEmpresa: [],
+      id: null,
+      nomeEmpresa: null,
+      cnpjEmpresa: null,
+      emailEmpresa: null,
     }
-  };
+  }
+  
+    salvar = () => {
+      let itemId = this.state.id
+      if(itemId != null) {
+        
+        let vetorEmpresa = [... this.state.arrayEmpresa]
+        vetorEmpresa[itemId].nomeEmpresa = this.state.nomeEmpresa
+        vetorEmpresa[itemId].cnpjEmpresa = this.state.cnpjEmpresa
+        vetorEmpresa[itemId].emailEmpresa = this.state.emailEmpresa
+        
+      } else {
+/*
+          let objEmpresa = {
+            nomeEmpresa: this.state.nomeEmpresa,
+            cnpjEmpresa: this.state.cnpjEmpresa,
+            emailEmpresa: this.state.emailEmpresa
+          }*/
+          firebase.database().ref("empresa").push({
+            nomeEmpresa: this.state.nomeEmpresa,
+            cnpjEmpresa: this.state.cnpjEmpresa,
+            emailEmpresa: this.state.emailEmpresa
+          })
+          .then(() => {
+            console.log('inserido!')
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      }
+      
+      this.forceUpdate()
+      }
+    
   render() {
     return (
         <ScrollView>
@@ -58,7 +75,7 @@ export default class RegistroEmpresa extends Component {
               />
                 
               <TextInput
-                name="nome"
+                name="nomeEmpresa"
                 placeholder={'Insira o nome da sua empresa'}
                 value={this.state.nomeEmpresa}
                 onChangeText={(text) => this.setState({nomeEmpresa: text})}
@@ -67,6 +84,7 @@ export default class RegistroEmpresa extends Component {
               </TextInput>
 
               <TextInput 
+                name="cnpjEmpresa"
                 style={styles.input} 
                 value={this.state.cnpjEmpresa}
                 placeholder={'Insira o CNPJ da sua empresa'}
@@ -79,7 +97,8 @@ export default class RegistroEmpresa extends Component {
                 />)}
               /> 
 
-              <TextInput 
+              <TextInput
+                name="emailEmpresa" 
                 style={styles.input} 
                 value={this.state.emailEmpresa}
                 onChangeText={(text) => this.setState({emailEmpresa: text})}
@@ -88,6 +107,7 @@ export default class RegistroEmpresa extends Component {
               </TextInput>
 
               <TextInput 
+              name="senha"
               style={styles.input} 
               placeholder={'Insira sua senha'} 
               secureTextEntry={true}>
@@ -97,7 +117,7 @@ export default class RegistroEmpresa extends Component {
                 style={styles.bottomButtons} 
                 color="#27AE60" 
                 mode="contained"
-                onPress={() => this.salvar()} 
+                onPress={() => this.salvar()}
                 >
                   Registrar-se
               </Button>
@@ -118,8 +138,8 @@ const styles = StyleSheet.create({
       },
 
       logo: {
-        width: 200,
-        height: 200
+        width: 350,
+        height: 150,
       },
 
       firstInput: {
