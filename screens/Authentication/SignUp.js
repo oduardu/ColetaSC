@@ -6,6 +6,7 @@ import { registration } from '../../API/firebaseMethods';
 import { FontAwesome } from '@expo/vector-icons'
 import validator from 'validator'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { TextInputMask } from "react-native-masked-text";
 
 export default function SignUp({ navigation }) {
 
@@ -135,16 +136,22 @@ export default function SignUp({ navigation }) {
                         <Ionicons name="mail" size={20} />
           </View>
           <View style={styles.searchBox}> 
-                        <TextInput 
-                        placeholder="Telefone"
-                        placeholderTextColor="#000"
-                        value={telefone}
-                        keyboardType="phone-pad"
-                        style={{flex:1,padding:0}}
-                        maxLength={11}
-                        onChangeText={(telefone) => setTelefone(telefone)}
-                        />
-                        <Ionicons name="phone-portrait" size={20} />
+          <TextInputMask
+          placeholder="Telefone"
+          placeholderTextColor="#000"
+          value={telefone}
+          keyboardType="phone-pad"
+          style={{flex:1,padding:0}}
+          maxLength={15}
+          onChangeText={(telefone) => setTelefone(telefone)}
+              type={'cel-phone'}
+              options={{
+              maskType: 'BRL',
+              withDDD: true,
+              dddMask: '(99) '
+              }}
+            />
+          <Ionicons name="phone-portrait" size={20} />
           </View>
           <View style={styles.searchBox}> 
                         <TextInput 
@@ -164,6 +171,7 @@ export default function SignUp({ navigation }) {
                         placeholderTextColor="#000"
                         value={confirmPassword}
                         autoCapitalize="none"
+                        secureTextEntry={true}
                         style={{flex:1,padding:0}}
                         onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
                         />
