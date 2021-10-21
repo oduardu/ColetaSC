@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { Title } from 'react-native-paper'
+import { View, Text, StyleSheet, ScrollView, Linking, } from 'react-native'
+import { Title, Avatar, Paragraph } from 'react-native-paper'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as firebase from 'firebase'
 import 'firebase/firestore'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaskedText } from 'react-native-mask-text'
 
 export default class pointInfo extends Component{
     constructor(props) {
@@ -13,12 +15,18 @@ export default class pointInfo extends Component{
           id: '',
           nome: '',
           tipoResiduo: '',
+          descricao: '',
           latitude: '',
           longitude: '',
           firstName: '',
           errorMessage: '',
           latitude: null,
           longitude: null,
+          idCreator: '',
+          email: '',
+          firstName: '',
+          lastName: '',
+          telefone: ''
         }
         }
         async componentDidMount() {
@@ -42,24 +50,30 @@ export default class pointInfo extends Component{
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
-              tipoResiduo: 'Lixo Organico, Lixo Eletronico',
+              tipoResiduo: 'Lixo Orgânico, Lixo Eletrônico',
+              descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
+              idCreator: doc.data().dadosPropretario.id,
             })
           } else if(doc.data().lixoEletronico === true){
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
-              tipoResiduo: 'Lixo Eletronico',
+              tipoResiduo: 'Lixo Eletrônico',
+              descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
+              idCreator: doc.data().dadosPropretario.id,
             })
           }else if(doc.data().lixoOrganico === true){
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
-              tipoResiduo: 'Lixo Organico',
+              tipoResiduo: 'Lixo Orgânico',
+              descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
+              idCreator: doc.data().dadosPropretario.id,
             })
           }else if(doc.data().lixoOrganico === false && doc.data().lixoEletronico == false){
             this.setState({
@@ -67,11 +81,28 @@ export default class pointInfo extends Component{
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
               tipoResiduo: 'Não declarado',
+              descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
+              idCreator: doc.data().dadosPropretario.id,
             })
           } 
+          console.log(this.state.idCreator)
           this.forceUpdate()
-          
+        const pointRefPropretario = db.collection('users').doc(this.state.idCreator);
+          pointRefPropretario.get().then((doc) => {
+          if(pointRefPropretario.empty) {
+            console.log('Sem documentos correspondentes');
+          } else {
+            this.setState({
+              email: doc.data().email,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              telefone: doc.data().telefone
+            })
+          }
+
+        }
+        )
         })
         }
     
@@ -79,14 +110,85 @@ export default class pointInfo extends Component{
     return (
         <ScrollView style={styles.container}>
         <View style={styles.top}>
-            <Ionicons style={styles.fab} name='chevron-back-outline' size={34} color='#192819' onPress={() => this.props.navigation.navigate('Dashboard')} />
+            <Ionicons style={styles.fab} name='chevron-back-outline' size={34} color='#192819' 
+            onPress={() => this.props.navigation.navigate('Dashboard')} />
         <View style={{
           alignItems: 'center'
         }}>
         <Title style={styles.title}>{this.state.nome}</Title>
         </View> 
         </View>
-        <Text>Ponto de Coleta</Text>
+        <View style={{flexDirection: 'row', marginTop: '30%', justifyContent: 'center'}}>
+           <Avatar.Image 
+             source={{
+               uri: 'https://img2.gratispng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg',
+             }}
+             size={80}
+           />
+        </View>
+        <View style={{
+          margintop: '20%',
+          alignItems: 'center'
+        }}>
+        <Text style={{
+            color: '#27AE60',
+            fontSize: 20,
+            fontWeight: 'bold',
+          }}>
+            Dados do Ponto de Coleta:
+          </Text>
+          </View>
+        <View style={styles.userInfoSection}>
+        <View style={styles.row}>
+           <Icon name="format-list-bulleted" color="#27AE60" size={25}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.descricao}</Text >
+         </View>
+         
+         <View style={styles.row}>
+           <Icon name="delete" color="#27AE60" size={25}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.tipoResiduo}</Text >
+         </View>
+
+         <View style={styles.row}>
+           <Icon name="map-marker" color="#27AE60" size={25}/>
+           <Paragraph style={{color:"#7c7aff", fontSize:15 }} onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${item?.latitude},${item?.longitude}`)}> Ir para o Google Maps</Paragraph>
+         </View>
+        </View>
+
+        <View style={styles.userInfoSection}>
+          <View style={{
+            alignItems: 'center'
+          }}>
+          <Text style={{
+            color: '#27AE60',
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginBottom: '5%',
+          }}>
+            Dados do Propretário:
+          </Text>
+          </View>
+         <View>
+
+         <View style={styles.row}>
+           <Icon name="account" color="#27AE60" size={25}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.firstName} {this.state.lastName}</Text >
+         </View>
+         
+         <View style={styles.row}>
+           <Icon name="email" color="#27AE60" size={25}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.email}</Text >
+         </View>
+
+         <View style={styles.row}>
+           <Icon name="phone" color="#27AE60" size={25}/>
+           
+           <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.telefone}</MaskedText>
+         </View>
+
+         
+        </View>
+        </View>
         </ScrollView>
     )
 }
@@ -97,24 +199,35 @@ const styles = StyleSheet.create({
     fab: {
       overflow: 'hidden',
       shadowOpacity: 0,
-      marginTop: '7.5%',
+      marginTop: '12.5%',
       marginLeft: '2%',
-      position: 'absolute'
+      position: 'absolute',
     },
-  
+    userInfoSection: {
+      paddingHorizontal: 30,
+      marginBottom: 25,
+      marginTop: 20,
+      backgroundColor: '#F7FFFA',
+      borderRadius: 20,
+      margin: 20
+    },
     container: {
       flex: 1,
       height: '100%',
       width: '100%',
       backgroundColor: '#fff',
     },
-
+    row: {
+      flexDirection: 'row',
+      marginBottom: 10
+    },
     top: {
       width: '100%',
       height: 100,
       backgroundColor: '#f2f9f2',
       borderBottomRightRadius: 50,
       borderBottomLeftRadius: 50,
+      paddingTop: '5%'
     },
 
     title: {

@@ -5,9 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Dashboard from './Dashboard';
 import pointList from './pointList'
 import Profile from './profile';
-import Setting from './Settings'
 import Info from './info';
-
 
 export default function Tabs() {
 
@@ -27,30 +25,10 @@ export default function Tabs() {
                 backgroundColor: '#fff',
                 borderRadius: 15,
                 height: 60,
-                ... styles.shadow
+                ...styles.shadow
             }
         }}
         >
-                <Tab.Screen name="Configuracao" component={Setting}
-                  options={{
-                  tabBarIcon: ({focused}) =>  (
-                    <View style={{alignItems: 'center', justifyContent: 'center',}}>
-                        <Image
-                        source={require('../assets/configuracao.png')}
-                        resizeMode='contain'
-                        style={{
-                            width: 25,
-                            height: 25,
-                            tintColor: focused ? '#27AE60' : '#616161',
-                        }}
-                        />
-                        <Text
-                        style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
-                        >CONFIG</Text>
-                    </View>
-                  )
-                }}                
-                />
                 <Tab.Screen name="Profile" component={Profile} 
                 options={{
                   tabBarIcon: ({focused}) =>  (
