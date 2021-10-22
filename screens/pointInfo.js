@@ -46,7 +46,7 @@ export default class pointInfo extends Component{
           this.setState({
             imagem: dados.imagem == null || dados.imagem == undefined ? 'https://img2.gratispng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg' : dados.imagem 
           })
-          console.log("Imagem: "+this.state.imagem)
+
 
           if (pointsRef.empty) {
             console.log('Sem documentos correspondentes');
