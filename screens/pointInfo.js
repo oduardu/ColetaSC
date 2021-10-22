@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import { View, Text, StyleSheet, ScrollView, Linking, } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Linking, Image, Dimensions, Animated } from 'react-native'
 import { Title, Avatar, Paragraph } from 'react-native-paper'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as firebase from 'firebase'
@@ -13,6 +13,7 @@ export default class pointInfo extends Component{
         super(props)
         this.state = {
           id: '',
+          imagem: null,
           nome: '',
           tipoResiduo: '',
           descricao: '',
@@ -40,7 +41,13 @@ export default class pointInfo extends Component{
           var vetorTemp = [];
       
           pointsRef.get().then((doc) => {
-            
+          
+          const dados = doc.data()
+          this.setState({
+            imagem: dados.imagem == null || dados.imagem == undefined ? 'https://img2.gratispng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg' : dados.imagem 
+          })
+          console.log("Imagem: "+this.state.imagem)
+
           if (pointsRef.empty) {
             console.log('Sem documentos correspondentes');
             return;
@@ -86,7 +93,6 @@ export default class pointInfo extends Component{
               idCreator: doc.data().dadosPropretario.id,
             })
           } 
-          console.log(this.state.idCreator)
           this.forceUpdate()
         const pointRefPropretario = db.collection('users').doc(this.state.idCreator);
           pointRefPropretario.get().then((doc) => {
@@ -98,6 +104,7 @@ export default class pointInfo extends Component{
               firstName: doc.data().firstName,
               lastName: doc.data().lastName,
               telefone: doc.data().telefone
+
             })
           }
 
@@ -107,6 +114,7 @@ export default class pointInfo extends Component{
         }
     
     render() {
+
     return (
         <ScrollView style={styles.container}>
         <View style={styles.top}>
@@ -118,18 +126,27 @@ export default class pointInfo extends Component{
         <Title style={styles.title}>{this.state.nome}</Title>
         </View> 
         </View>
-        <View style={{flexDirection: 'row', marginTop: '30%', justifyContent: 'center'}}>
-           <Avatar.Image 
-             source={{
-               uri: 'https://img2.gratispng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg',
-             }}
-             size={80}
-           />
+        <View style={{flexDirection: 'row', marginTop: '5%', justifyContent: 'center'}}>
+        <Image 
+          source={{
+          uri: this.state.imagem,
+        }}
+          style={{
+                marginTop: 2,
+                width: '60%',
+                height: 250,
+                borderRadius: 20,
+                marginBottom: '5%',
+              }
+            }
+        />
+
         </View>
         <View style={{
           margintop: '20%',
           alignItems: 'center'
         }}>
+          
         <Text style={{
             color: '#27AE60',
             fontSize: 20,
@@ -194,7 +211,7 @@ export default class pointInfo extends Component{
 }
 
 }
-
+const screen = Dimensions.get('window');
 const styles = StyleSheet.create({
     fab: {
       overflow: 'hidden',

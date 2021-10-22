@@ -57,7 +57,13 @@ export default function Info() {
                 resíduo, compreendendo todo o percurso gasto na viagem para remoção dos resíduos dos locais 
                 onde foram acondicionados aos locais de descarga (podendo ser: aterros, usinas de reciclagem, 
                 de incineração, etc.), até o retorno ao ponto de partida.
-                {'\n\n'}
+                </Text>
+                <Text style={{
+                    marginLeft: '5%',
+                    marginRight: '5%',
+                    marginTop: '2%',
+                    color: '#BBA7D9'
+                }}>
                 Toque no card para saber mais.
                 </Text>
             </TouchableOpacity>
@@ -84,13 +90,20 @@ export default function Info() {
                 <Text style={{
                     marginLeft: '5%',
                     marginRight: '5%',
+                    
                     color: '#FFF',
                     
                 }}>
                 O lixo eletrônico ou Resíduos de Equipamentos Elétricos e Eletrônicos (REEE) são todos os 
                 dispositivos eletroeletrônicos, de celulares, tablets e computadores a TVs, lavadoras de louça e 
                 de roupa, geladeiras e etc., que foram descartados por seus donos.
-                {'\n\n'}
+                </Text>
+                <Text style={{
+                    marginLeft: '5%',
+                    marginRight: '5%',
+                    marginTop: '2%',
+                    color: '#BBA7D9'
+                }}>
                 Toque no card para saber mais.
                 </Text>
             </TouchableOpacity>
@@ -119,7 +132,13 @@ export default function Info() {
                     
                 }}>
                 De acordo com o Artigo 33 da Lei N° 12.305/2010 (Política Nacional dos Resíduos Sólidos, ou PNRS), o fabricante é obrigado a fazer a logística reversa dos eletroeletrônicos que comercializa. Ou seja, é responsabilidade do dono procurar o fabricante, que é obrigado a recolher e descartar de forma ecologicamente correta.
-                {'\n\n'}
+                </Text>
+                <Text style={{
+                    marginLeft: '5%',
+                    marginRight: '5%',
+                    marginTop: '2%',
+                    color: '#BBA7D9'
+                }}>
                 Toque no card para saber mais.
                 </Text>
             </TouchableOpacity>
@@ -129,6 +148,8 @@ export default function Info() {
         </ScrollView>
     )
 }
+
+
 
 const styles = StyleSheet.create({
     shadow: {

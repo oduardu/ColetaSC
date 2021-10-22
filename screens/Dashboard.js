@@ -34,7 +34,6 @@ export default class Dashboard extends Component {
     const { status } = await Location.requestForegroundPermissionsAsync()
 
     if (status !== 'granted') {
-      console.log("Permissão Negada!")
 
       this.setState({
         errorMessage: 'PERMISSION NOT GRANTED'

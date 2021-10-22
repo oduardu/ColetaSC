@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { View, TextInput, StyleSheet, Text, ScrollView } from 'react-native'
+import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView } from 'react-native'
+import * as Permissions from 'expo-permissions'
+import * as ImagePicker from 'expo-image-picker'
 import { HelperText, Button, Icon, Checkbox,  } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import { addCollectPoint } from '../API/firebaseMethods';
@@ -27,18 +29,52 @@ export default class addCellectPoint extends React.Component {
                 nome: '',
                 sobrenome: '',
                 id: ''
-            }
+            },
+            imagem: null, //dados da imagem
+            imagemPermissao: null, //permissao pra abrir a galeria e ver os nuds
         }
     }
+
+    async getPermissao(){
+        
+        if(Platform.OS === "ios"){
+            const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+            if(status !== 'granted'){
+                //mensagem que aparece quando o usuário não aceita as permissões de galeria
+                alert('Por favor, aceite as permissões!')
+            }
+        }
+        const { status } = await Permissions.askAsync(Permissions.CAMERA)
+        this.setState({imagemPermissao: status === 'granted'})
+    }
+
+    async escolherImagem() {
+        this.getPermissao();
+    
+        if (this.state.imagemPermissao) {
+          let resultado = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+            base64: true
+          });
+    
+          if (!resultado.cancelled) {
+            await this.setState({ imagem: resultado.base64 });
+          }
+        }
+      }
    
 
     async componentDidMount() {
+
         this.getData()
         const location = await Location.getCurrentPositionAsync();
         this.setState({
         latitude: location.coords.latitude,
-        longitude: location.coords.longitude
-    });
+        longitude: location.coords.longitude});
+        this.getPermissao()
     }
 
     getData = async () => {
@@ -68,22 +104,27 @@ export default class addCellectPoint extends React.Component {
 
         if(!this.state.lixoEletronico && !this.state.lixoOrganico && !this.state.nome && !this.state.descricao && !this.state.latitude && !this.state.longitude) {
             this.setState({
-                errorType: 'Você precisa preencher todos os dados para cadastrar um novo ponto de coleta!',
+                errorType: 'Você precisa inserir todos os dados para cadastrar um novo ponto de coleta!',
                 visible: !this.state.visible
             })
         } else if(!this.state.lixoEletronico && !this.state.lixoOrganico) {
             this.setState({
-                errorType: 'Você precisa colocar o tipo de resíduo coletado!',
+                errorType: 'Você precisa inserir o tipo de resíduo coletado!',
+                visible: !this.state.visible
+            })
+        } else if(this.state.imagem == null || this.state.imagem == undefined){
+            this.setState({
+                errorType: 'Você precisa inserir a imagem do ponto!',
                 visible: !this.state.visible
             })
         } else if(!this.state.nome) {
             this.setState({
-                errorType: 'Você precisa colocar o nome do ponto de coleta!',
+                errorType: 'Você precisa inserir o nome do ponto de coleta!',
                 visible: !this.state.visible
             })
         } else if(!this.state.descricao) {
             this.setState({
-                errorType: 'Você precisa colocar a descrição do ponto de coleta!',
+                errorType: 'Você precisa inserir a descrição do ponto de coleta!',
                 visible: !this.state.visible
             })
         } else if(!this.state.latitude && !this.state.longitude) {
@@ -102,6 +143,7 @@ export default class addCellectPoint extends React.Component {
           localizacao: this.state.marker,
           descricao: this.state.descricao,
           dadosPropretario: this.state.dadosPropretario,
+          imagem: 'data:image/png;base64,'+this.state.imagem
         })          
           this.emptyState();
           this.props.navigation.navigate('Dashboard');
@@ -162,7 +204,7 @@ export default class addCellectPoint extends React.Component {
 
                 <View style={styles._input}> 
                 <Checkbox
-                 value={this.state.lixoEletronico}
+                value={this.state.lixoEletronico}
                 onPress={this.trocarOBaguiDoCheckBox}
                 status={this.state.lixoEletronico ? 'checked' : 'unchecked'}/>
                 <Text>Lixo Eletronico </Text>
@@ -188,6 +230,11 @@ export default class addCellectPoint extends React.Component {
                     <Marker coordinate={this.state.marker} />
                 }
                     </MapView>
+                    </View>
+                    <View>
+                    <Button style={styles.buttonSave} mode="contained" onPress={() => this.escolherImagem()}>
+                        Selecionar Imagem
+                    </Button>
                     </View>
                     <View style={{alignItems: 'center',marginBottom: 10}}>
                     <HelperText type="error" visible={this.state.visible}

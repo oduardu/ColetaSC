@@ -52,7 +52,6 @@ export default class Profile extends React.Component {
       telefone: doc.data().telefone,
       empresa: doc.data().empresa,
     })
-    console.log(this.state.empresa)
     if(this.state.empresa == true){
       this.setState({
         tipoConta: 'Conta de Empresa'
