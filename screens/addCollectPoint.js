@@ -4,10 +4,8 @@ import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { HelperText, Button, Icon, Checkbox,  } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
-import { addCollectPoint } from '../API/firebaseMethods';
 import * as firebase from 'firebase'
 import 'firebase/firestore'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Location from 'expo-location'
 
 export default class addCellectPoint extends React.Component {
@@ -37,7 +35,7 @@ export default class addCellectPoint extends React.Component {
 
     async getPermissao(){
         
-        if(Platform.OS === "ios"){
+        if (Platform.OS === "ios"){
             const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL)
             if(status !== 'granted'){
                 //mensagem que aparece quando o usuário não aceita as permissões de galeria
@@ -127,7 +125,7 @@ export default class addCellectPoint extends React.Component {
                 errorType: 'Você precisa inserir a descrição do ponto de coleta!',
                 visible: !this.state.visible
             })
-        } else if(!this.state.latitude && !this.state.longitude) {
+        } else if(!this.state.marker) {
             this.setState({
                 errorType: 'Você precisa inserir um ponto no mapa!',
                 visible: !this.state.visible
@@ -232,19 +230,19 @@ export default class addCellectPoint extends React.Component {
                     </MapView>
                     </View>
                     <View>
-                    <Button style={styles.buttonSave} mode="contained" onPress={() => this.escolherImagem()}>
+                    <Button style={styles.selectImageButton} mode="contained" onPress={() => this.escolherImagem()}>
                         Selecionar Imagem
                     </Button>
                     </View>
-                    <View style={{alignItems: 'center',marginBottom: 10}}>
+                <Button style={styles.saveButton} mode="contained" onPress={() => this.salvar()}>
+                    Salvar
+                </Button>
+                <View style={{alignItems: 'center', marginBottom: 10}}>
                     <HelperText type="error" visible={this.state.visible}
                     >
                     {this.state.errorType}
                     </HelperText>
                     </View>
-                <Button style={styles.buttonSave} mode="contained" onPress={() => this.salvar()}>
-                    Salvar
-                </Button>
             </View>
             </ScrollView>
             )
@@ -304,11 +302,18 @@ const styles = StyleSheet.create({
 
         overflow: 'hidden' 
     },
-    buttonSave: {
+    selectImageButton: {
         backgroundColor: "#27AE60",
         marginLeft: '5%',
         width: '90%',
         borderRadius:30
-        
+    },
+    saveButton: {
+            backgroundColor: "#27AE60",
+            marginLeft: '5%',
+            width: '90%',
+            borderRadius:30,
+            marginTop: 10
+      
     }
 })
