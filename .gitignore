@@ -1,5 +1,7 @@
 node_modules/
+config/
 .expo/
+.expo-chared/
 npm-debug.*
 *.jks
 *.p8
@@ -8,7 +10,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-config/
+
 # macOS
 .DS_Store
 config/keys.js
