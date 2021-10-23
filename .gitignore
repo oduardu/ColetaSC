@@ -1,7 +1,7 @@
 node_modules/
 config/
 .expo/
-.expo-chared/
+.expo-shared/
 npm-debug.*
 *.jks
 *.p8
