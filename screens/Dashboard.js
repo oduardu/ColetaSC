@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#27AE60'
-  },
+  }
 
 }
 
