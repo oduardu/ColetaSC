@@ -214,7 +214,9 @@ export default class addCellectPoint extends React.Component {
                 </View>
                 
                     <View style={styles.itemAlign}>
-                    <MapView style={styles.map} initialRegion={{
+                    <MapView style={styles.map}
+                    customMapStyle={mapViewCustom}
+                    initialRegion={{
                         latitude: this.state.latitude,
                         longitude: this.state.longitude,
                         latitudeDelta: 0.005,
@@ -317,3 +319,40 @@ const styles = StyleSheet.create({
       
     }
 })
+
+const mapViewCustom = [
+    {
+      "featureType": "administrative",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.icon",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    }
+  ]

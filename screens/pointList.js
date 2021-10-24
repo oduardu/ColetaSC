@@ -209,22 +209,9 @@ export default class pointList extends React.Component {
                        
                             {this.state.pointList?.map((item, i) => (
                                 <>
-                                    <Swipeable
-                                    style={{marginBottom: '5%'}}
-                                        renderRightActions={(progress, dragX) => {
-                                            
-                                            
-                                            let vetorPoint = {
-                                                id: item.id,
-                                                nome: item.nome,
-                                                tipoResiduo: item.tipoResiduo,
-                                                latitude: item.latitude,
-                                                longitude: item.longitude,
-                                            };
-
-                                            return this.rightActions(progress, dragX, vetorPoint)
-                                        }}>
-                                        
+                                   
+              
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Informacoes do Ponto de Coleta', item)}>
                                         <View style={{backgroundColor: '#FFF', marginBottom: '5%', borderRadius: 30}}>
                                         <View style={{marginLeft: '5%'}}>
                                         <Title>{item.nome},</Title> 
@@ -236,7 +223,7 @@ export default class pointList extends React.Component {
                                         </View>
                                         <Paragraph></Paragraph>
                                         </View>
-                                    </Swipeable>
+                                   </TouchableOpacity>
                                 </>
                             ))}
                         {/*<Card.Content>

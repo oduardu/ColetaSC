@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import { View, Text, StyleSheet, ScrollView, Linking, Image, Dimensions, Animated } from 'react-native'
-import { Title, Avatar, Paragraph } from 'react-native-paper'
+import { View, Text, StyleSheet,  ScrollView, Linking, Image, Dimensions, Animated, Alert } from 'react-native'
+import { Title, Avatar, Paragraph, Button } from 'react-native-paper'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as firebase from 'firebase'
 import 'firebase/firestore'
@@ -16,6 +16,7 @@ export default class pointInfo extends Component{
           imagem: null,
           nome: '',
           tipoResiduo: '',
+          idUser: '',
           descricao: '',
           latitude: '',
           longitude: '',
@@ -35,7 +36,10 @@ export default class pointInfo extends Component{
         }
 
         getData = async () => {
-
+          const id = firebase.auth().currentUser.uid;
+          this.setState({
+            idUser: id
+          })
           const db = await firebase.firestore()
           const pointsRef = db.collection('collectPoints').doc(this.props.route.params.id);
           var vetorTemp = [];
@@ -112,14 +116,49 @@ export default class pointInfo extends Component{
         )
         })
         }
+
+        confirmRemove = (id) => {
+          Alert.alert('Confirmação:', 'Você tem certeza que deseja deletar este ponto de coleta?\n\n Obs: Ação Irreversível.',[
+            {text: 'Sim', onPress: () => {var pointRef = firebase.firestore().collection("collectPoints").doc(id);
+            pointRef.delete().then(() => {
+            }).catch((error) => {
+                console.log(error);
+            })
+            this.props.navigation.navigate('Dashboard')
+          }},
+          {text: 'Não'}
+          ])
+      }
+
+        
     
     render() {
-
+      let fabButton
+      if(this.state.idUser == this.state.idCreator){
+        fabButton = <View>
+          <Button style={{
+            backgroundColor: '#e83845',
+            width: '80%',
+            height: 50,
+            marginTop: '5%',
+            marginLeft: '10%',
+            color: '#FFFFFF',
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          color= {'#fff'}
+          onPress={() => this.confirmRemove(this.state.id)}
+          >
+            Deletar Ponto
+          </Button>
+      </View>
+      }
     return (
         <ScrollView style={styles.container}>
         <View style={styles.top}>
             <Ionicons style={styles.fab} name='chevron-back-outline' size={34} color='#192819' 
-            onPress={() => this.props.navigation.navigate('Dashboard')} />
+            onPress={() => this.props.navigation.goBack()} />
         <View style={{
           alignItems: 'center'
         }}>
@@ -189,7 +228,7 @@ export default class pointInfo extends Component{
 
          <View style={styles.row}>
            <Icon name="account" color="#27AE60" size={25}/>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.firstName} {this.state.lastName}</Text >
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.firstName}{this.state.lastName}</Text >
          </View>
          
          <View style={styles.row}>
@@ -203,7 +242,7 @@ export default class pointInfo extends Component{
            <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.telefone}</MaskedText>
          </View>
 
-         
+         {fabButton}
         </View>
         </View>
         </ScrollView>

@@ -22,6 +22,7 @@ export default class Dashboard extends Component {
     }
   }
 
+  
 
 
 
@@ -86,6 +87,8 @@ export default class Dashboard extends Component {
   };
 
   render() {
+
+    
     const contaEmpresa = this.state.empresa
     let fabButton
     if(contaEmpresa == true){
@@ -102,8 +105,9 @@ export default class Dashboard extends Component {
     return (
       <View style={styles.container}>
         <MapView
+        style={styles.map}
           provider={PROVIDER_GOOGLE}
-          style={styles.map}
+          customMapStyle={mapViewCustom}
           initialRegion={{
             latitude: this.state.latitude,
             longitude: this.state.longitude,
@@ -202,3 +206,40 @@ const styles = StyleSheet.create({
 }
 
 )
+
+const mapViewCustom = [
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
+]
