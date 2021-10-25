@@ -8,7 +8,7 @@ The project was developed during 2021, based on classes given by Rocketseat, in 
 ___
 ### Dependencies
 ```
-	"@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/material-bottom-tabs": "^5.3.15",
     "@react-navigation/native": "^5.8.1",
@@ -56,16 +56,16 @@ ___
 Create a folder '**config/**' inside, create a '**Keys.js**' file and put this code with **yours keys**:
 ```javascript
 export  default {
-	firebaseConfig: {
-		apiKey: "YOUR KEYS",
-		authDomain: "YOUR KEYS",
-		databaseURL: "YOUR KEYS",
-		projectId: "YOUR KEYS",
-		storageBucket: "YOUR KEYS",
-		messagingSenderId: "YOUR KEYS",
-		appId: "YOUR KEYS",
-		measurementId: "YOUR KEYS",
-	}
+   firebaseConfig: {
+	apiKey: "YOUR KEYS",
+	authDomain: "YOUR KEYS",
+	databaseURL: "YOUR KEYS",
+	projectId: "YOUR KEYS",
+	storageBucket: "YOUR KEYS",
+	messagingSenderId: "YOUR KEYS",
+	appId: "YOUR KEYS",
+	measurementId: "YOUR KEYS",
+ }
 }
 ```
 ##### 3. START THE APPLICATION
