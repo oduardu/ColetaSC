@@ -6,4 +6,4 @@ Pelos alunos: Eduardo Pazzini Zancanaro, Filipe Medeiros de Almeida, Leonardo Mo
 
 
 
-## Technologies Used:
+# Technologies Used:
