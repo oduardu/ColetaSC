@@ -2,7 +2,7 @@
 
  ![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E) ¨ ![Node.Js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)              ¨  ![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 
-The ColetaSC application was developed as a final high school work by students from the federal institute of santa catarina, the project idea consists of a map which will show the user where he can make the correct disposal of their waste, whether organic or electronic .
+The ColetaSC application was developed as a final high school work by students from the Federal Institute of Santa Catarina, the project idea consists of a map which will show the user where he can make the correct disposal of their waste, whether organic or electronic .
 
 The project was developed during 2021, based on classes given by Rocketseat, in addition to the knowledge gained from the institute's classes.
 ___
