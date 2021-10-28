@@ -81,5 +81,5 @@ ___
 
 > Eduardo Pazzini Zancanaro ([@oduardu](https://github.com/oduardu "Github: Eduardo Pazzini Zancanaro"))
 > 
-Filipe Medeiros de Almeida ([@UmFilipe](https://github.com/UmFilipe "Github: Filipe Medeiros de Almeida"))
+> Filipe Medeiros de Almeida ([@UmFilipe](https://github.com/UmFilipe "Github: Filipe Medeiros de Almeida"))
 ___
