@@ -15,7 +15,7 @@ ___
 ##### 2. CONFIGURE YOUR FIREBASE AND GET KEYS
 > Firebase Database Structure **(Coming Soon)**
 
-Create a folder '**config/**' inside, create a '**Keys.js**' file and put this code with **yours keys**:
+Create a folder '**config**' inside, create a '**keys.js**' file and put this code with **yours keys**:
 ```javascript
 export  default {
    firebaseConfig: {
