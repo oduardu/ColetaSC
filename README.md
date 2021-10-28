@@ -71,7 +71,8 @@ export  default {
 ##### 3. START THE APPLICATION
 	expo start
 ##### 4. OPEN THE PROJECT IN YOUR SMARTPHONE WITH EXPO GO
-> [Expo – Apps on the Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent) 
+> [Expo – Apps on the Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
+> 
 > [‎Expo Go on the App Store](https://apps.apple.com/us/app/expo-go/id982107779)
 
 ___
