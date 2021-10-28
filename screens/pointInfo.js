@@ -28,7 +28,9 @@ export default class pointInfo extends Component{
           email: '',
           firstName: '',
           lastName: '',
-          telefone: ''
+          telefone: '',
+          lixoEletronico: '',
+          lixoOrganico: ''
         }
         }
         async componentDidMount() {
@@ -61,6 +63,8 @@ export default class pointInfo extends Component{
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
+              lixoEletronico: doc.data().lixoEletronico,
+              lixoOrganico: doc.data().lixoOrganico,
               tipoResiduo: 'Lixo Orgânico, Lixo Eletrônico',
               descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
@@ -70,6 +74,8 @@ export default class pointInfo extends Component{
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
+              lixoEletronico: doc.data().lixoEletronico,
+              lixoOrganico: doc.data().lixoOrganico,
               latitude: doc.data().localizacao.latitude,
               tipoResiduo: 'Lixo Eletrônico',
               descricao: doc.data().descricao,
@@ -81,6 +87,8 @@ export default class pointInfo extends Component{
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
+              lixoEletronico: doc.data().lixoEletronico,
+              lixoOrganico: doc.data().lixoOrganico,
               tipoResiduo: 'Lixo Orgânico',
               descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
@@ -91,6 +99,8 @@ export default class pointInfo extends Component{
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
+              lixoEletronico: doc.data().lixoEletronico,
+              lixoOrganico: doc.data().lixoOrganico,
               tipoResiduo: 'Não declarado',
               descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
@@ -134,13 +144,56 @@ export default class pointInfo extends Component{
     
     render() {
       let fabButton
+
+      let vetorPointEdit = {
+        nome: this.state.nome,
+        descricao: this.state.descricao,
+        lixoOrganico: this.state.lixoOrganico,
+        lixoEletronico: this.state.lixoEletronico,
+        imagem: this.state.imagem,
+        marker: {
+          latitude: this.state.latitude,
+          longitude: this.state.longitude
+        }
+      }
+
       if(this.state.idUser == this.state.idCreator){
         fabButton = <View>
+          
           <Button style={{
-            backgroundColor: '#e83845',
+            backgroundColor: '#e9c46a',
             width: '80%',
             height: 50,
-            marginTop: '5%',
+            marginTop: '2%',
+            marginLeft: '10%',
+            color: '#FFFFFF',
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          color= {'#fff'}
+          onPress={() => this.props.navigation.navigate('Adicionar Ponto de Coleta', { 
+            id: this.state.id,
+            nome: this.state.nome,
+            descricao: this.state.descricao,
+            lixoOrganico: this.state.lixoOrganico,
+            lixoEletronico: this.state.lixoEletronico,
+            imagem: this.state.imagem,
+            marker: {
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }})
+          
+          }
+          >
+            Editar Ponto
+          </Button>
+
+          <Button style={{
+            backgroundColor: '#e76f51',
+            width: '80%',
+            height: 50,
+            marginTop: '2%',
             marginLeft: '10%',
             color: '#FFFFFF',
             borderRadius: 30,
@@ -168,12 +221,12 @@ export default class pointInfo extends Component{
         <View style={{flexDirection: 'row', marginTop: '5%', justifyContent: 'center'}}>
         <Image 
           source={{
-          uri: this.state.imagem,
+          uri: 'data:image/png;base64,'+this.state.imagem,
         }}
           style={{
                 marginTop: 2,
                 width: '60%',
-                height: 250,
+                height: 240,
                 borderRadius: 20,
                 marginBottom: '5%',
               }
@@ -228,7 +281,7 @@ export default class pointInfo extends Component{
 
          <View style={styles.row}>
            <Icon name="account" color="#27AE60" size={25}/>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.firstName}{this.state.lastName}</Text >
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.firstName} {this.state.lastName}</Text >
          </View>
          
          <View style={styles.row}>
@@ -242,8 +295,13 @@ export default class pointInfo extends Component{
            <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.telefone}</MaskedText>
          </View>
 
-         {fabButton}
+         
         </View>
+        </View>
+        <View style={{
+          justifyContent: 'center'
+        }}>
+        {fabButton}
         </View>
         </ScrollView>
     )

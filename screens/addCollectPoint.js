@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView } from 'react-native'
+import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image } from 'react-native'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { HelperText, Button, Icon, Checkbox,  } from 'react-native-paper'
@@ -66,7 +66,7 @@ export default class addCellectPoint extends React.Component {
    
 
     async componentDidMount() {
-
+        this.carrregarDados()
         this.getData()
         const location = await Location.getCurrentPositionAsync();
         this.setState({
@@ -98,8 +98,8 @@ export default class addCellectPoint extends React.Component {
         })
     }
 
-    salvar = () => {
-
+    salvar = async () => {
+      
         if(!this.state.lixoEletronico && !this.state.lixoOrganico && !this.state.nome && !this.state.descricao && !this.state.latitude && !this.state.longitude) {
             this.setState({
                 errorType: 'Você precisa inserir todos os dados para cadastrar um novo ponto de coleta!',
@@ -130,7 +130,8 @@ export default class addCellectPoint extends React.Component {
                 errorType: 'Você precisa inserir um ponto no mapa!',
                 visible: !this.state.visible
         })
-        } else {
+        } else if (this.state.id == null){
+
         const currentUser = firebase.auth().currentUser;
         const db = firebase.firestore();
         db.collection('collectPoints').doc()
@@ -145,29 +146,42 @@ export default class addCellectPoint extends React.Component {
         })          
           this.emptyState();
           this.props.navigation.navigate('Dashboard');
+        } else {
+          var pontoRef = firebase.firestore().doc("collectPoints/" + this.state.id);
+          pontoRef.update({
+          nome: this.state.nome,
+          lixoEletronico: this.state.lixoEletronico,
+          lixoOrganico: this.state.lixoOrganico,
+          localizacao: this.state.marker,
+          descricao: this.state.descricao,
+          imagem: this.state.imagem
+          })
+          this.emptyState();
+          this.props.navigation.navigate('Dashboard');
         }
-        };
-/*
-    carrregarDados() {
+        
+      }
+
+
+    carrregarDados = () => {
         let { route } = this.props;
-
-        if (route.params) {
-            let { pontoDeColeta } = route.params;
-
-            if (pontoDeColeta.id != null) {
+        console.log(route.params.id)
+        if (route.params != null) {
+            if (route.params.id != null) {
                 this.setState({
-                    id: pontoDeColeta.id,
-                    nome: pontoDeColeta.nome,
-                    tipoResiduos: pontoDeColeta.tipoResiduos,
-                    marker: pontoDeColeta.marker
-                    
-                })
-                ;
+                    id: route.params.id,
+                    nome: route.params.nome,
+                    imagem: route.params.imagem,
+                    descricao: route.params.descricao,
+                    lixoEletronico: route.params.lixoEletronico,
+                    lixoOrganico: route.params.lixoOrganico,
+                    marker: route.params.marker
+                });
             }
         }
 
     }
-    */
+  
 
     trocarOBaguiDoCheckBox = () => this.setState({ lixoEletronico: !this.state.lixoEletronico })
     trocarOBaguiDoCheckBoxDoOrganico = () => this.setState({ lixoOrganico: !this.state.lixoOrganico})
@@ -177,13 +191,30 @@ export default class addCellectPoint extends React.Component {
             return (
                 <ScrollView style={styles.container}> 
             <View style={{marginTop: '25%'}}>
+              <View style={{
+                alignItems: 'center',
+              }}>
+            <Image 
+          source={{
+          uri: 'data:image/png;base64,'+this.state.imagem,
+        }}
+          style={{
+                marginTop: 2,
+                width: '60%',
+                height: 240,
+                borderRadius: 50,
+                marginBottom: '5%',
+              }
+            }
+        />
+        </View>
                 <View style={styles._input}> 
                 <TextInput
                 placeholder="Nome do Ponto de Coleta"
                 placeholderTextColor="#000"
                 autoCapitalize="none"
                 style={{flex:1,padding:0}}
-                value={this.nome}
+                value={this.state.nome}
                 onChangeText={(text) => this.setState({ nome: text })}
                 />
                 </View>

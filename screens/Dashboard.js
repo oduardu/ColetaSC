@@ -22,12 +22,13 @@ export default class Dashboard extends Component {
     }
   }
 
-  
-
-
-
   async componentDidMount() {
-
+    const location = await Location.getCurrentPositionAsync();
+    this.setState({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    });
+    
     await this.getData();
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.getData();
@@ -41,11 +42,7 @@ export default class Dashboard extends Component {
       })
     }
 
-    const location = await Location.getCurrentPositionAsync();
-    this.setState({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    });
+    
   }
 
 
