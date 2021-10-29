@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import { View, Text, StyleSheet,  ScrollView, Linking, Image, Dimensions, Animated, Alert } from 'react-native'
+import { View, Text, StyleSheet, Modal,  ScrollView, Linking, Image, Dimensions, Animated, Alert } from 'react-native'
 import { Title, Avatar, Paragraph, Button } from 'react-native-paper'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MaskedText } from 'react-native-mask-text'
+import StarRating from 'react-native-star-rating';
 
 export default class pointInfo extends Component{
     constructor(props) {
@@ -30,24 +31,26 @@ export default class pointInfo extends Component{
           lastName: '',
           telefone: '',
           lixoEletronico: '',
-          lixoOrganico: ''
+          lixoOrganico: '',
+          lixoReciclavel: '',
+          starCount: 2.5958,
+          visible: false
         }
         }
         async componentDidMount() {
           await this.getData()
+          this.chekPointRating()
         }
 
         getData = async () => {
-          const id = firebase.auth().currentUser.uid;
+          const id = await firebase.auth().currentUser.uid;
           this.setState({
             idUser: id
           })
           const db = await firebase.firestore()
           const pointsRef = db.collection('collectPoints').doc(this.props.route.params.id);
-          var vetorTemp = [];
       
           pointsRef.get().then((doc) => {
-          
           const dados = doc.data()
           this.setState({
             imagem: dados.imagem == null || dados.imagem == undefined ? 'https://img2.gratispng.com/20180623/iqh/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c40ce333.6524068515297806760528.jpg' : dados.imagem 
@@ -58,15 +61,16 @@ export default class pointInfo extends Component{
             console.log('Sem documentos correspondentes');
             return;
           }
-          else if(doc.data().lixoOrganico === true && doc.data().lixoEletronico == true){
+          else if(doc.data().lixoOrganico === true && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === true){
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
-              latitude: doc.data().localizacao.latitude,
               lixoEletronico: doc.data().lixoEletronico,
               lixoOrganico: doc.data().lixoOrganico,
-              tipoResiduo: 'Lixo Orgânico, Lixo Eletrônico',
+              lixoReciclavel: doc.data().lixoReciclavel,
+              tipoResiduo: 'Lixo Orgânico, Lixo Reciclável e Lixo Eletrônico',
               descricao: doc.data().descricao,
+              latitude: doc.data().localizacao.latitude,
               longitude: doc.data().localizacao.longitude,
               idCreator: doc.data().dadosPropretario.id,
             })
@@ -76,9 +80,10 @@ export default class pointInfo extends Component{
               nome: doc.data().nome,
               lixoEletronico: doc.data().lixoEletronico,
               lixoOrganico: doc.data().lixoOrganico,
-              latitude: doc.data().localizacao.latitude,
+              lixoReciclavel: doc.data().lixoReciclavel,
               tipoResiduo: 'Lixo Eletrônico',
               descricao: doc.data().descricao,
+              latitude: doc.data().localizacao.latitude,
               longitude: doc.data().localizacao.longitude,
               idCreator: doc.data().dadosPropretario.id,
             })
@@ -86,22 +91,37 @@ export default class pointInfo extends Component{
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
-              latitude: doc.data().localizacao.latitude,
               lixoEletronico: doc.data().lixoEletronico,
               lixoOrganico: doc.data().lixoOrganico,
+              lixoReciclavel: doc.data().lixoReciclavel,
               tipoResiduo: 'Lixo Orgânico',
               descricao: doc.data().descricao,
+              latitude: doc.data().localizacao.latitude,
               longitude: doc.data().localizacao.longitude,
               idCreator: doc.data().dadosPropretario.id,
             })
-          }else if(doc.data().lixoOrganico === false && doc.data().lixoEletronico == false){
+          }else if(doc.data().lixoOrganico === false && doc.data().lixoEletronico === false && doc.data().lixoReciclavel === false){
+            this.setState({
+              id: doc.id,
+              nome: doc.data().nome,
+              lixoEletronico: doc.data().lixoEletronico,
+              lixoOrganico: doc.data().lixoOrganico,
+              lixoReciclavel: doc.data().lixoReciclavel,
+              tipoResiduo: 'Não declarado',
+              descricao: doc.data().descricao,
+              latitude: doc.data().localizacao.latitude,
+              longitude: doc.data().localizacao.longitude,
+              idCreator: doc.data().dadosPropretario.id,
+            })
+          }else if(doc.data().lixoReciclavel === true) {
             this.setState({
               id: doc.id,
               nome: doc.data().nome,
               latitude: doc.data().localizacao.latitude,
               lixoEletronico: doc.data().lixoEletronico,
               lixoOrganico: doc.data().lixoOrganico,
-              tipoResiduo: 'Não declarado',
+              lixoReciclavel: doc.data().lixoReciclavel,
+              tipoResiduo: 'Lixo Reciclável',
               descricao: doc.data().descricao,
               longitude: doc.data().localizacao.longitude,
               idCreator: doc.data().dadosPropretario.id,
@@ -118,7 +138,6 @@ export default class pointInfo extends Component{
               firstName: doc.data().firstName,
               lastName: doc.data().lastName,
               telefone: doc.data().telefone
-
             })
           }
 
@@ -139,9 +158,28 @@ export default class pointInfo extends Component{
           {text: 'Não'}
           ])
       }
-
+      chekPointRating = () => {
+        const db = firebase.firestore()
         
+        const pointsRef = db.collection('collectPoints').doc(this.state.id).collection('avaliacoes');
+        const snapshot = pointsRef.get();
+
+        snapshot.forEach(doc => {
+          console.log(doc.data())
+        })  
+      }
+      onStarRatingPress(rating) {
+        this.setState({
+          starCount: rating
+        });
+      }
     
+      handleVisible = (visible) => {
+        this.setState({
+          visible: visible
+        })
+      }
+
     render() {
       let fabButton
 
@@ -159,7 +197,6 @@ export default class pointInfo extends Component{
 
       if(this.state.idUser == this.state.idCreator){
         fabButton = <View>
-          
           <Button style={{
             backgroundColor: '#e9c46a',
             width: '80%',
@@ -178,12 +215,12 @@ export default class pointInfo extends Component{
             descricao: this.state.descricao,
             lixoOrganico: this.state.lixoOrganico,
             lixoEletronico: this.state.lixoEletronico,
+            lixoReciclavel: this.state.lixoReciclavel,
             imagem: this.state.imagem,
             marker: {
               latitude: this.state.latitude,
               longitude: this.state.longitude
             }})
-          
           }
           >
             Editar Ponto
@@ -206,9 +243,54 @@ export default class pointInfo extends Component{
             Deletar Ponto
           </Button>
       </View>
+      } else {
+        fabButton = <View>
+          <Button style={{
+            backgroundColor: '#76c893',
+            width: '80%',
+            height: 50,
+            marginTop: '2%',
+            marginLeft: '10%',
+            color: '#FFFFFF',
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          color= {'#fff'}
+          onPress={() => {
+            this.handleVisible(!this.state.visible)
+          }
+          }
+          >
+            Avaliar
+          </Button>
+          </View>
       }
     return (
         <ScrollView style={styles.container}>
+        <Modal 
+        style={styles.centeredView}
+        animationType = {"fade"}  
+        transparent={true}
+        visible={this.state.visible} 
+        onRequestClose={() => {
+            this.handleVisible(!this.state.visible)
+          }}>
+          <View style={{
+            flex: 1,
+            backgroundColor: 'hsla(145, 63%, 42%, 0.15)'
+          }}>
+          <View
+          style={styles.modal}
+          >
+            <View>
+            <Ionicons style={styles.modalButton} name='chevron-back-outline' size={34} color='#192819' 
+            onPress={() => this.handleVisible(!this.state.visible)} />
+            <Text>Testezada</Text>
+            </View>
+          </View>
+          </View>
+        </Modal>
         <View style={styles.top}>
             <Ionicons style={styles.fab} name='chevron-back-outline' size={34} color='#192819' 
             onPress={() => this.props.navigation.goBack()} />
@@ -262,7 +344,21 @@ export default class pointInfo extends Component{
            <Icon name="map-marker" color="#27AE60" size={25}/>
            <Paragraph style={{color:"#7c7aff", fontSize:15 }} onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${item?.latitude},${item?.longitude}`)}> Ir para o Google Maps</Paragraph>
          </View>
+         <View style={{
+           marginTop: 5,
+           marginBottom: 5
+         }}>
+        <StarRating
+        disabled={true}
+        maxStars={5}
+        rating={this.state.starCount}
+        fullStarColor={"#27AE60"}
+        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        />
         </View>
+
+        </View>
+
 
         <View style={styles.userInfoSection}>
           <View style={{
@@ -294,14 +390,14 @@ export default class pointInfo extends Component{
            
            <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.telefone}</MaskedText>
          </View>
-
-         
         </View>
         </View>
         <View style={{
-          justifyContent: 'center'
+          justifyContent: 'center',
+          marginBottom: 20,
         }}>
         {fabButton}
+        
         </View>
         </ScrollView>
     )
@@ -317,6 +413,12 @@ const styles = StyleSheet.create({
       marginLeft: '2%',
       position: 'absolute',
     },
+    modalButton: {
+      position: 'absolute',
+      left: 1,
+      bottom: 1,
+      width: 45,
+    },
     userInfoSection: {
       paddingHorizontal: 30,
       marginBottom: 25,
@@ -330,7 +432,19 @@ const styles = StyleSheet.create({
       height: '100%',
       width: '100%',
       backgroundColor: '#fff',
+      
     },
+    modal: {  
+      justifyContent: 'center',  
+      alignItems: 'center',   
+      backgroundColor : "#FFF",   
+      height: 200,  
+      width: '90%',  
+      borderRadius: 20,  
+      marginTop: '80%',  
+      marginLeft: '5%',  
+       
+       },  
     row: {
       flexDirection: 'row',
       marginBottom: 10
@@ -342,6 +456,13 @@ const styles = StyleSheet.create({
       borderBottomRightRadius: 50,
       borderBottomLeftRadius: 50,
       paddingTop: '5%'
+    },
+
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
     },
 
     title: {

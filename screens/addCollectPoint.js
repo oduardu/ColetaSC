@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image } from 'react-native'
+import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
-import { HelperText, Button, Icon, Checkbox,  } from 'react-native-paper'
+import { HelperText, Button, Checkbox,  } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import * as Location from 'expo-location'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default class addCellectPoint extends React.Component {
 
@@ -15,6 +16,7 @@ export default class addCellectPoint extends React.Component {
         this.state = {
             lixoEletronico: false,
             lixoOrganico: false,
+            lixoReciclavel: false,
             visible: false,
             id: null,
             nome: '',
@@ -48,7 +50,6 @@ export default class addCellectPoint extends React.Component {
 
     async escolherImagem() {
         this.getPermissao();
-    
         if (this.state.imagemPermissao) {
           let resultado = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -66,13 +67,13 @@ export default class addCellectPoint extends React.Component {
    
 
     async componentDidMount() {
-        this.carrregarDados()
         this.getData()
         const location = await Location.getCurrentPositionAsync();
         this.setState({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude});
         this.getPermissao()
+        this.carrregarDados()
     }
 
     getData = async () => {
@@ -81,12 +82,13 @@ export default class addCellectPoint extends React.Component {
         const doc = await usersRef.get()
     
         this.setState({
-            dadosPropretario: {
+          dadosPropretario: {
           nome: doc.data().firstName, 
           sobrenome: doc.data().lastName,
           id: doc.id,
         }
         })
+        console.log(this.state.dadosPropretario)
       }
 
     emptyState = () => {
@@ -100,12 +102,12 @@ export default class addCellectPoint extends React.Component {
 
     salvar = async () => {
       
-        if(!this.state.lixoEletronico && !this.state.lixoOrganico && !this.state.nome && !this.state.descricao && !this.state.latitude && !this.state.longitude) {
+        if(!this.state.lixoEletronico && !this.state.lixoOrganico && !this.state.lixoReciclavel && !this.state.nome && !this.state.descricao && !this.state.marker) {
             this.setState({
                 errorType: 'Você precisa inserir todos os dados para cadastrar um novo ponto de coleta!',
                 visible: !this.state.visible
             })
-        } else if(!this.state.lixoEletronico && !this.state.lixoOrganico) {
+        } else if(!this.state.lixoEletronico && !this.state.lixoOrganico && !this.state.lixoReciclavel) {
             this.setState({
                 errorType: 'Você precisa inserir o tipo de resíduo coletado!',
                 visible: !this.state.visible
@@ -139,10 +141,11 @@ export default class addCellectPoint extends React.Component {
           nome: this.state.nome,
           lixoEletronico: this.state.lixoEletronico,
           lixoOrganico: this.state.lixoOrganico,
+          lixoReciclavel: this.state.lixoReciclavel,
           localizacao: this.state.marker,
           descricao: this.state.descricao,
           dadosPropretario: this.state.dadosPropretario,
-          imagem: 'data:image/png;base64,'+this.state.imagem
+          imagem: this.state.imagem
         })          
           this.emptyState();
           this.props.navigation.navigate('Dashboard');
@@ -152,6 +155,7 @@ export default class addCellectPoint extends React.Component {
           nome: this.state.nome,
           lixoEletronico: this.state.lixoEletronico,
           lixoOrganico: this.state.lixoOrganico,
+          lixoReciclavel: this.state.lixoReciclavel,
           localizacao: this.state.marker,
           descricao: this.state.descricao,
           imagem: this.state.imagem
@@ -165,7 +169,6 @@ export default class addCellectPoint extends React.Component {
 
     carrregarDados = () => {
         let { route } = this.props;
-        console.log(route.params.id)
         if (route.params != null) {
             if (route.params.id != null) {
                 this.setState({
@@ -175,39 +178,47 @@ export default class addCellectPoint extends React.Component {
                     descricao: route.params.descricao,
                     lixoEletronico: route.params.lixoEletronico,
                     lixoOrganico: route.params.lixoOrganico,
+                    lixoReciclavel: route.params.lixoReciclavel,
                     marker: route.params.marker
                 });
             }
         }
-
     }
-  
 
-    trocarOBaguiDoCheckBox = () => this.setState({ lixoEletronico: !this.state.lixoEletronico })
-    trocarOBaguiDoCheckBoxDoOrganico = () => this.setState({ lixoOrganico: !this.state.lixoOrganico})
+    checkBoxEletronico = () => this.setState({ lixoEletronico: !this.state.lixoEletronico })
+    checkBoxOrganico = () => this.setState({ lixoOrganico: !this.state.lixoOrganico})
+    checkBoxReciclavel = () => this.setState({ lixoReciclavel: !this.state.lixoReciclavel })
 
         render() { 
 
             return (
                 <ScrollView style={styles.container}> 
-            <View style={{marginTop: '25%'}}>
-              <View style={{
+            <View style={{marginTop: '10%'}}>
+              
+                <TouchableOpacity style={{
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => this.escolherImagem()}
+              >
             <Image 
           source={{
-          uri: 'data:image/png;base64,'+this.state.imagem,
+          uri: this.state.imagem == null || this.state.imagem == undefined ? 'https://cdn-icons-png.flaticon.com/512/2983/2983067.png' : this.state.imagem
         }}
           style={{
                 marginTop: 2,
-                width: '60%',
-                height: 240,
-                borderRadius: 50,
-                marginBottom: '5%',
+                width: 200,
+                height: 200,
+                borderRadius: 100,
+                marginBottom: '2%',
+                opacity: 0.8,
               }
             }
         />
-        </View>
+        <Ionicons style={styles.fab} name='folder-open' size={60} color='#FFF' 
+             />
+        <Ionicons style={styles.fabFolder} name='folder-open' size={60} color='#343a40' 
+             />
+          </TouchableOpacity>
                 <View style={styles._input}> 
                 <TextInput
                 placeholder="Nome do Ponto de Coleta"
@@ -230,20 +241,42 @@ export default class addCellectPoint extends React.Component {
                 onChangeText={(text) => this.setState({ descricao: text })}
                 />
                 </View>
-
-                <View style={styles._input}> 
+                <View style={{marginTop: 10, 
+                backgroundColor: '#fff',
+                    width: '90%',
+                    alignSelf:'center',
+                    borderRadius: 10,
+                    padding: 10,
+                    shadowColor: '#ccc',
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                    marginBottom: 10,
+        }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Checkbox
                 value={this.state.lixoEletronico}
-                onPress={this.trocarOBaguiDoCheckBox}
+                onPress={this.checkBoxEletronico}
                 status={this.state.lixoEletronico ? 'checked' : 'unchecked'}/>
-                <Text>Lixo Eletronico </Text>
+                <Text>Lixo Eletrônico </Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Checkbox
                 value={this.state.lixoOrganico}
-                onPress={this.trocarOBaguiDoCheckBoxDoOrganico}
+                onPress={this.checkBoxOrganico}
                 status={this.state.lixoOrganico ? 'checked' : 'unchecked'}/>
-                <Text>Lixo Organico </Text>
+                <Text>Lixo Orgânico </Text>
                 </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Checkbox
+                value={this.state.lixoReciclavel}
+                onPress={this.checkBoxReciclavel}
+                status={this.state.lixoReciclavel ? 'checked' : 'unchecked'}/>
                 
+                <Text>Lixo Reciclável </Text>
+                </View>
+                </View>
                     <View style={styles.itemAlign}>
                     <MapView style={styles.map}
                     customMapStyle={mapViewCustom}
@@ -253,19 +286,15 @@ export default class addCellectPoint extends React.Component {
                         latitudeDelta: 0.005,
                         longitudeDelta: 0,
                     }}
-
                     showsUserLocation={true}
                     onPress={(e) => this.setState({ marker: e.nativeEvent.coordinate })}>
                 {
                     this.state.marker &&
-                    <Marker coordinate={this.state.marker} />
+                    <Marker coordinate={this.state.marker} 
+                    image={require('../assets/map_markerc.png')}
+                    />
                 }
                     </MapView>
-                    </View>
-                    <View>
-                    <Button style={styles.selectImageButton} mode="contained" onPress={() => this.escolherImagem()}>
-                        Selecionar Imagem
-                    </Button>
                     </View>
                 <Button style={styles.saveButton} mode="contained" onPress={() => this.salvar()}>
                     Salvar
@@ -288,7 +317,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         width: '100%'
     },
-
+    fab: {
+      overflow: 'hidden',
+      shadowOpacity: 0,
+      marginTop: '32.5%',
+      right: '30%',
+      position: 'absolute',
+    },
+    fabFolder: {
+      overflow: 'hidden',
+      shadowOpacity: 0,
+      marginTop: '32.5%',
+      right: '30%',
+      position: 'absolute',
+      opacity: 0.8,
+    },
     inputText: {
         backgroundColor: '#fff',
         borderWidth: 1.4,
@@ -332,7 +375,6 @@ const styles = StyleSheet.create({
     },
     itemAlign: {
         alignItems: "center", 
-
         overflow: 'hidden' 
     },
     selectImageButton: {
