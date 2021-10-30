@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image, TouchableOpacity, Modal } from 'react-native'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
-import { HelperText, Button, Checkbox,  } from 'react-native-paper'
+import { HelperText, Button, Checkbox, FAB } from 'react-native-paper'
 import MapView, { Marker } from 'react-native-maps'
 import * as firebase from 'firebase'
 import 'firebase/firestore'
@@ -30,15 +30,17 @@ export default class addCellectPoint extends React.Component {
                 sobrenome: '',
                 id: ''
             },
-            imagem: null, //dados da imagem
-            imagemPermissao: null, //permissao pra abrir a galeria e ver os nuds
+            imagem: null,
+            imagemPermissao: null,
+            visibleModal: false,
         }
     }
 
     async getPermissao(){
         
         if (Platform.OS === "ios"){
-            const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+            const {status} = 
+            await Permissions.askAsync(Permissions.CAMERA_ROLL)
             if(status !== 'granted'){
                 //mensagem que aparece quando o usuário não aceita as permissões de galeria
                 alert('Por favor, aceite as permissões!')
@@ -88,7 +90,6 @@ export default class addCellectPoint extends React.Component {
           id: doc.id,
         }
         })
-        console.log(this.state.dadosPropretario)
       }
 
     emptyState = () => {
@@ -166,6 +167,11 @@ export default class addCellectPoint extends React.Component {
         
       }
 
+      handleVisible = (visible) => {
+        this.setState({
+          visibleModal: visible
+        })
+      }
 
     carrregarDados = () => {
         let { route } = this.props;
@@ -192,7 +198,40 @@ export default class addCellectPoint extends React.Component {
         render() { 
 
             return (
-                <ScrollView style={styles.container}> 
+            <ScrollView style={styles.container}> 
+            <Modal
+        style={styles.centeredView}
+        animationType = {"fade"}  
+        transparent={true}
+        visible={this.state.visibleModal} 
+        >
+          <View style={styles.itemAlign}>
+                    <MapView style={styles.map}
+                    customMapStyle={mapViewCustom}
+                    initialRegion={{
+                        latitude: this.state.latitude,
+                        longitude: this.state.longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0,
+                    }}
+                    showsUserLocation={true}
+                    onPress={(e) => this.setState({ marker: e.nativeEvent.coordinate
+                     })
+                    
+                    }>
+                {
+                  
+                    this.state.marker &&
+                    <Marker coordinate={this.state.marker} 
+                    image={require('../assets/map_markerc.png')}
+                    />
+                }
+                    </MapView>
+                    <Button style={styles.mapConfirmButton} mode="contained" onPress={() => this.handleVisible(!this.state.visibleModal)}>
+                    {this.state.marker == null ? "Voltar" : "Confirmar"}
+                </Button>
+                    </View>
+        </Modal>
             <View style={{marginTop: '10%'}}>
               
                 <TouchableOpacity style={{
@@ -202,7 +241,7 @@ export default class addCellectPoint extends React.Component {
               >
             <Image 
           source={{
-          uri: this.state.imagem == null || this.state.imagem == undefined ? 'https://cdn-icons-png.flaticon.com/512/2983/2983067.png' : this.state.imagem
+          uri: this.state.imagem == null || this.state.imagem == undefined ? 'https://cdn-icons-png.flaticon.com/512/2983/2983067.png' : 'data:image/png;base64,'+this.state.imagem
         }}
           style={{
                 marginTop: 2,
@@ -214,8 +253,6 @@ export default class addCellectPoint extends React.Component {
               }
             }
         />
-        <Ionicons style={styles.fab} name='folder-open' size={60} color='#FFF' 
-             />
         <Ionicons style={styles.fabFolder} name='folder-open' size={60} color='#343a40' 
              />
           </TouchableOpacity>
@@ -230,7 +267,6 @@ export default class addCellectPoint extends React.Component {
                 />
                 </View>
                 <View style={styles._input}> 
-                
                 <TextInput
                 placeholder="Descrição"
                 placeholderTextColor="#000"
@@ -241,6 +277,22 @@ export default class addCellectPoint extends React.Component {
                 onChangeText={(text) => this.setState({ descricao: text })}
                 />
                 </View>
+                <TouchableOpacity onPress={() => this.handleVisible(!this.state.visibleModal)}>
+                  <Image 
+                  source= {{
+                    uri: 'https://subli.info/wp-content/uploads/2015/05/google-maps-blur.png'
+                  }}
+                  style={{
+                    marginTop: 2,
+                    width: '90%',
+                    height: 200,
+                    marginLeft: '5%',
+                    opacity: 1,
+                    borderRadius: 20,
+                  }}
+                  />
+                
+                </TouchableOpacity>
                 <View style={{marginTop: 10, 
                 backgroundColor: '#fff',
                     width: '90%',
@@ -277,25 +329,6 @@ export default class addCellectPoint extends React.Component {
                 <Text>Lixo Reciclável </Text>
                 </View>
                 </View>
-                    <View style={styles.itemAlign}>
-                    <MapView style={styles.map}
-                    customMapStyle={mapViewCustom}
-                    initialRegion={{
-                        latitude: this.state.latitude,
-                        longitude: this.state.longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0,
-                    }}
-                    showsUserLocation={true}
-                    onPress={(e) => this.setState({ marker: e.nativeEvent.coordinate })}>
-                {
-                    this.state.marker &&
-                    <Marker coordinate={this.state.marker} 
-                    image={require('../assets/map_markerc.png')}
-                    />
-                }
-                    </MapView>
-                    </View>
                 <Button style={styles.saveButton} mode="contained" onPress={() => this.salvar()}>
                     Salvar
                 </Button>
@@ -316,6 +349,45 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFF',
         width: '100%'
+    },
+    buttonBack: {
+        position: 'absolute',
+        margin: 16,
+        marginBottom: 100,
+        right: 1,
+        bottom: 0,
+        width: 45,
+        height: 45,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#000'
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalButton: {
+      position: 'absolute',
+      left: 1,
+      bottom: 1,
+      width: 45,
+    },
+    modal: {  
+      justifyContent: 'center',  
+      alignItems: 'center',   
+      backgroundColor : "#FFF",   
+      height: 200,  
+      width: '90%',  
+      borderRadius: 20,  
+      marginTop: '80%',  
+      marginLeft: '5%',  
+       
+       },  
+    row: {
+      flexDirection: 'row',
+      marginBottom: 10
     },
     fab: {
       overflow: 'hidden',
@@ -368,10 +440,8 @@ const styles = StyleSheet.create({
       },
 
     map: {
-        width: '90%',
-        height: 300,
-        marginBottom: 20,
-        borderRadius: 30,
+        width: '100%',
+        height: '100%',
     },
     itemAlign: {
         alignItems: "center", 
@@ -384,12 +454,20 @@ const styles = StyleSheet.create({
         borderRadius:30
     },
     saveButton: {
-            backgroundColor: "#27AE60",
-            marginLeft: '5%',
-            width: '90%',
-            borderRadius:30,
-            marginTop: 10
-      
+      backgroundColor: "#27AE60",
+      marginLeft: '5%',
+      width: '90%',
+      borderRadius:30,
+      marginTop: 10
+    },
+    mapConfirmButton: {
+      backgroundColor: "#27AE60",
+      marginLeft: '15%',
+      width: '60%',
+      borderRadius:30,
+      marginTop: 10,
+      position: 'absolute',
+      bottom: '10%'
     }
 })
 
