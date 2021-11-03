@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { TextInput, View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
-import { FAB, HelperText } from 'react-native-paper';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { FAB } from 'react-native-paper';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import * as firebase from 'firebase'
 import 'firebase/firestore'
-import SearchInput from '../components/SearchInput';
 import * as Location from 'expo-location'
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -23,7 +20,7 @@ export default class Dashboard extends Component {
   }
 
   async componentDidMount() {
-    const location = await Location.getCurrentPositionAsync();
+    const location = await Location.getCurrentPositionAsync()
     this.setState({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude
@@ -38,15 +35,10 @@ export default class Dashboard extends Component {
     if (status !== 'granted') {
 
       this.setState({
-        errorMessage: 'PERMISSION NOT GRANTED'
+        errorMessage: 'PERMISSÃO NÃO CONCEDIDA'
       })
     }
-
-    
   }
-
-
-
 
   getData = async () => {
     const id = firebase.auth().currentUser.uid;
@@ -56,7 +48,6 @@ export default class Dashboard extends Component {
     this.setState({
      empresa: doc.data().empresa,
     })
-    
 
     const db = await firebase.firestore()
     const pointsRef = db.collection('collectPoints');
@@ -85,7 +76,6 @@ export default class Dashboard extends Component {
 
   render() {
 
-    
     const contaEmpresa = this.state.empresa
     let fabButton
     if(contaEmpresa == true){

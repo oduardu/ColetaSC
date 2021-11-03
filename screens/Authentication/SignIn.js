@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Snackbar, TextInput } from 'react-native-paper';
+import { Snackbar } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {signIn} from '../../API/firebaseMethods';
 
@@ -37,25 +37,28 @@ export default function SignIn() {
           <Image style={styles.icon} source={require('../../assets/logo.png')}></Image>
         </View>
     <View>
+    <View style={styles.searchBox}>
       <TextInput
         selectionColor='#bfbfbf'
         underlineColor='#27AE60'
-
-        style={styles.formInput}
+        style={{flex:1,padding:0}}
         placeholder="Email"
         value={email}
         onChangeText={(email) => setEmail(email)}
         autoCapitalize="none"
       />
+      </View>
+      <View style={styles.searchBox}>
       <TextInput
         selectionColor='#bfbfbf'
         underlineColor='#27AE60'
-        style={styles.formInput}
         placeholder="Senha"
         value={password}
+        style={{flex:1,padding:0}}
         onChangeText={(password) => setPassword(password)}
         secureTextEntry={true}
       />
+      </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={
         handlePress
@@ -119,7 +122,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  searchBox: {
+    flexDirection:"row",
+    backgroundColor: '#fff',
+    width: '90%',
+    alignSelf:'center',
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: '#ccc',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+    marginBottom: 20
+  },
   formInput: {
     width: 300,
     height: 30,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Alert, Platform, TextInput, StyleSheet, Text, ScrollView, Image, TouchableOpacity, Modal } from 'react-native'
+import { View, Platform, TextInput, StyleSheet, Text, ScrollView, Image, TouchableOpacity, Modal } from 'react-native'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { HelperText, Button, Checkbox, FAB } from 'react-native-paper'

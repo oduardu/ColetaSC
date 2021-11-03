@@ -3,7 +3,6 @@ import {View, Image, SafeAreaView, StyleSheet} from 'react-native';
 import {
   Avatar,
   Title,
-  Caption,
   Text,
   FAB,
   
@@ -118,51 +117,9 @@ export default class Profile extends React.Component {
            <View style={styles.row,{marginLeft: '7.3%'}}>
            <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{(this.state.data).replace('-','/')}</Text>
            </View>
-
-          <View >
-             <Text style={{marginTop: '10%', fontSize: 24, fontWeight: 'bold', fontFamily: 'sans-serif-light'}}>Favoritos:</Text>
           </View>
           </View>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-          <View style={{
-            backgroundColor: '#f5f5f5',
-            marginLeft: '3.3%',
-            width: '45%',
-            height: '110%',
-            shadowColor: '#aba7a7',
-            ... styles.shadow
-          }}><View style={{
-            alignItems: 'center',
-            marginTop: 10
-          }}> 
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>Teste</Text>
-            <Image source={require('../assets/image.png')} style={{
-              width: 100,
-              height: 100
-            }} />
-          </View>
-          </View>
-
-          <View style={{
-            backgroundColor: '#f5f5f5',
-            marginLeft: '3.3%',
-            width: '45%',
-            height: '110%',
-            shadowColor: '#f0f0ee',
-            ... styles.shadow
-          }}><View style={{
-            alignItems: 'center',
-            marginTop: 10
-          }}> 
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>Teste</Text>
-            <Image source={require('../assets/image.png')} style={{
-              width: 100,
-              height: 100
-            }} />
-          </View>
-          </View>
-          </View>
+          
        <FAB
           style={styles.fab}
           small

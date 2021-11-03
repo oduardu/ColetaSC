@@ -7,23 +7,23 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 import apiKeys from './config/keys';
 
-import SignUp from './screens/Authentication/SignUp';
-import SignIn from './screens/Authentication/SignIn';
-import LoadingScreen from './screens/Authentication/LoadingScreen';
-import Dashboard from './screens/Dashboard';
+import SignUp from './screens/Authentication/SignUp'
+import SignIn from './screens/Authentication/SignIn'
+import LoadingScreen from './screens/Authentication/LoadingScreen'
+import Dashboard from './screens/Dashboard'
 import Info from './screens/info'
 import User from './screens/Authentication/User'
 import Profile from './screens/profile'
-import Tabs from './screens/Tabs';
-import addCellectPoint from './screens/addCollectPoint';
-import pointList from './screens/pointList';
-import pointInfo from './screens/pointInfo';
+import Tabs from './Tabs'
+import addCellectPoint from './screens/addCollectPoint'
+import pointList from './screens/pointList'
+import pointInfo from './screens/pointInfo'
 
 const Stack = createStackNavigator()
 
 export default function App() {
   if (!firebase.apps.length) {
-    console.log('Conecrado com o Firebase...')
+    console.log('Conectado com o Firebase...')
     firebase.initializeApp(apiKeys.firebaseConfig);
   }
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Dashboard from './Dashboard';
-import pointList from './pointList'
-import Profile from './profile';
-import Info from './info';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Dashboard from './screens/Dashboard'
+import pointList from './screens/pointList'
+import Profile from './screens/profile'
+import Info from './screens/info'
 
 export default function Tabs() {
 
@@ -34,7 +34,7 @@ export default function Tabs() {
                   tabBarIcon: ({focused}) =>  (
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
                         <Image
-                        source={require('../assets/profile.png')}
+                        source={require('./assets/profile.png')}
                         resizeMode='contain'
                         style={{
                             width: 30,
@@ -55,7 +55,7 @@ export default function Tabs() {
                   tabBarIcon: ({focused}) =>  (
                     <View style={{alignItems: 'center', justifyContent: 'center', }}>
                         <Image
-                        source={require('../assets/map.png')}
+                        source={require('./assets/map.png')}
                         resizeMode='contain'
                         style={{
                             width: 25,
@@ -70,13 +70,12 @@ export default function Tabs() {
                   )
                 }}                
                 />
-                
                 <Tab.Screen name="Settings" component={pointList}
                   options={{
                   tabBarIcon: ({focused}) =>  (
                     <View style={{alignItems: 'center', justifyContent: 'center',}}>
                         <Image
-                        source={require('../assets/list.png')}
+                        source={require('./assets/list.png')}
                         resizeMode='contain'
                         style={{
                             width: 25,
@@ -96,7 +95,7 @@ export default function Tabs() {
                   tabBarIcon: ({focused}) =>  (
                     <View style={{alignItems: 'center', justifyContent: 'center',}}>
                         <Image
-                        source={require('../assets/info.png')}
+                        source={require('./assets/info.png')}
                         resizeMode='contain'
                         style={{
                             width: 25,
@@ -112,8 +111,6 @@ export default function Tabs() {
                 }}                
                 />
         </Tab.Navigator>
-
-
     )
 }
 
