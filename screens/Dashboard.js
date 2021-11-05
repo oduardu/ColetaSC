@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { FAB } from 'react-native-paper';
+import { View, StyleSheet, Dimensions , TouchableOpacity, TextInput } from 'react-native';
+import { FAB, Text } from 'react-native-paper';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import * as Location from 'expo-location'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -15,7 +16,11 @@ export default class Dashboard extends Component {
       errorMessage: '',
       latitude: null,
       longitude: null,
-      empresa: false
+      empresa: false,
+      search: null,
+      stateLE: false,
+      stateLR: false,
+      stateLO: false
     }
   }
 
@@ -64,18 +69,125 @@ export default class Dashboard extends Component {
         nome: doc.data().nome,
         latitude: doc.data().localizacao.latitude,
         longitude: doc.data().localizacao.longitude,
+        lixoEletronico: doc.data().lixoEletronico,
+        lixoReciclavel: doc.data().lixoReciclavel,
+        lixoOrganico: doc.data().lixoOrganico
       })
     });
     this.setState({ pointData: vetorTemp })
     this.forceUpdate()
   }
 
+  selectButton(botao){
+    if(botao == "LE"){
+      this.setState({
+        stateLE: !this.state.stateLE
+      })
+      this.filtrar()
+    } else if(botao == "LO") {
+      this.setState({
+        stateLO: !this.state.stateLO
+      })
+      this.filtrar()
+    } else if(botao == "LR"){
+      this.setState({
+        stateLR: !this.state.stateLR
+      })
+      this.filtrar()
+    }
+  }
+
+  filtrar(){
+    const vetorTemp = []
+    if(this.state.stateLR == true && this.state.stateLE == true && this.state.stateLO == true) { 
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoOrganico && this.state.pointData[i].lixoReciclavel){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if (this.state.stateLO == true && this.state.stateLR == false && this.state.stateLE == true) { 
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoOrganico){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if (this.state.stateLO == false && this.state.stateLR == true && this.state.stateLE == true) {
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoReciclavel){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if (this.state.stateLO == true && this.state.stateLR == true && this.state.stateLE == false) {
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoReciclavel && this.state.pointData[i].lixoOrganico){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if(this.state.stateLR == false &&  this.state.stateLE == true && this.state.stateLO == false) { 
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoEletronico){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if (this.state.stateLR == false &&  this.state.stateLE == false && this.state.stateLO == true) {
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoOrganico){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    } else if (this.state.stateLR == true && this.state.stateLE == false && this.state.stateLO == false) {
+      for(let i = 0; i < this.state.pointData.length; i++){
+        if(this.state.pointData[i].lixoReciclavel){
+          vetorTemp.push(
+            this.state.pointData[i]
+          ) 
+        }
+      }
+    }
+    else {
+      this.getData();
+  }
+   this.setState({
+     pointData: vetorTemp
+   })
+  }
+
+  pesquisar = (text) => {
+    if (text != '') {
+        const newArray = this.state.pointData.filter((item) => {
+            const itemDado = item.nome ? item.nome.toUpperCase() : ''.toUpperCase();
+            const textDado = text.toUpperCase();
+            return itemDado.indexOf(textDado) > -1;
+        });
+        this.setState({
+            pointData: newArray,
+            search: text,
+        });
+    } else {
+        this.getData();
+        this.setState({ search: null });
+    }
+
+}
+
   handlePress = () => {
     navigation.navigate('Adicionar Ponto de Coleta')
   };
 
   render() {
-
+    
     const contaEmpresa = this.state.empresa
     let fabButton
     if(contaEmpresa == true){
@@ -84,7 +196,7 @@ export default class Dashboard extends Component {
         style={styles.fab}
         small
         icon="plus"
-        onPress={() => { this.props.navigation.navigate('Adicionar Ponto de Coleta') }}
+        onPress={() => {     this.filtrar() }}//this.props.navigation.navigate('Adicionar Ponto de Coleta') }}
       />
     </View>
     }
@@ -113,6 +225,91 @@ export default class Dashboard extends Component {
             />
           ))}
         </MapView>
+        <View style={styles.searchBox}> 
+        <TextInput 
+          placeholder="Pesquisar"
+          autoCapitalize="none"
+          keyboardType="default"
+          style={{flex: 1, padding: 0}}
+          onChangeText={(text) => this.pesquisar(text)}
+          />
+          <Ionicons name="ios-search" size={20} />
+        </View>
+        <View>
+          <View
+          style={{
+            borderColor: '#ced4da',
+            borderWidth: 2,
+            borderRadius: 30,
+            backgroundColor: 'rgb(108, 117, 125, 0.4)',
+            position: 'absolute',
+            bottom: 750,
+            left: '5%', 
+            width: '26%',
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          >
+            <TouchableOpacity
+        onPress={() => this.selectButton("LE") }
+        style={{
+          width: '100%',
+          alignItems: 'center'
+        }}>
+          <Text style={{color: '#6c757d', fontSize: 12}}>Lixo Eletrônico</Text>
+          </TouchableOpacity>
+          </View>
+          <View
+          style={{
+            borderColor: '#ced4da',
+            borderWidth: 2,
+            borderRadius: 30,
+            backgroundColor: 'rgb(108, 117, 125, 0.4)',
+            position: 'absolute',
+            bottom: 750,
+            right: '38%',
+            width: '26%',
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          >
+          <TouchableOpacity
+                onPress={()=> {this.selectButton('LR')}}
+        style={{
+          width: '100%',
+          alignItems: 'center'
+        }}>
+          <Text style={{color: '#6c757d', fontSize: 12}}>Lixo Reciclável</Text>
+          </TouchableOpacity>
+          </View>
+
+          <View
+          style={{
+            borderColor: '#ced4da',
+            borderWidth: 2,
+            borderRadius: 30,
+            backgroundColor: 'rgb(108, 117, 125, 0.4)',
+            position: 'absolute',
+            bottom: 750,
+            right: '5%',
+            width: '28%',
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          >
+             <TouchableOpacity
+                onPress={() => {this.selectButton('LO')}}
+        style={{
+          width: '100%',
+          alignItems: 'center'
+        }}>
+          <Text style={{color: '#6c757d', fontSize: 12}}>Lixo Orgânico</Text>
+          </TouchableOpacity>
+          </View>
+        </View>
             {fabButton}
         </View>
 
@@ -137,7 +334,6 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: '2%'
   },
-
   buttonText: {
     fontSize: 20,
     fontWeight: 'bold',

@@ -28,8 +28,6 @@ export default class pointList extends React.Component {
           });
     }
 
-   
-
     getData = async () => {
 
         const id = firebase.auth().currentUser.uid;
