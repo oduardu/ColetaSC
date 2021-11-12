@@ -12,15 +12,16 @@ export default class Dashboard extends Component {
     super(props)
     this.state = {
       pointData: [],
+      pointList: [],
       firstName: '',
       errorMessage: '',
       latitude: null,
       longitude: null,
       empresa: false,
       search: null,
-      stateLE: false,
-      stateLR: false,
-      stateLO: false
+      stateLE: true,
+      stateLR: true,
+      stateLO: true
     }
   }
 
@@ -74,95 +75,57 @@ export default class Dashboard extends Component {
         lixoOrganico: doc.data().lixoOrganico
       })
     });
-    this.setState({ pointData: vetorTemp })
+    this.setState({ pointData: vetorTemp, pointList: vetorTemp })
     this.forceUpdate()
   }
 
+
   selectButton(botao){
+
+    let le = this.state.stateLE
+    let lo = this.state.stateLO
+    let lr = this.state.stateLR
+
     if(botao == "LE"){
-      this.setState({
-        stateLE: !this.state.stateLE
+      le = !le
+      this.setState({ 
+        stateLE: le
       })
-      this.filtrar()
+
     } else if(botao == "LO") {
+      lo = !lo
       this.setState({
-        stateLO: !this.state.stateLO
+        stateLO: lo
       })
-      this.filtrar()
+
     } else if(botao == "LR"){
+      lr = !lr
       this.setState({
-        stateLR: !this.state.stateLR
+        stateLR: lr
       })
-      this.filtrar()
+
     }
+
+    this.filtrar(lr, le, lo)
   }
 
-  filtrar(){
+  filtrar(lr, le, lo){
     const vetorTemp = []
-    if(this.state.stateLR == true && this.state.stateLE == true && this.state.stateLO == true) { 
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoOrganico && this.state.pointData[i].lixoReciclavel){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
+    
+    for(let i = 0; i < this.state.pointList.length; i++){
+
+      let obj = this.state.pointList[i]
+      let rejeitado = false
+
+      if((lr == true && obj.lixoReciclavel == true) || (le == true && obj.lixoEletronico == true) || (lo == true && obj.lixoOrganico == true)){
+        vetorTemp.push(obj)
       }
-    } else if (this.state.stateLO == true && this.state.stateLR == false && this.state.stateLE == true) { 
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoOrganico){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    } else if (this.state.stateLO == false && this.state.stateLR == true && this.state.stateLE == true) {
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoEletronico && this.state.pointData[i].lixoReciclavel){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    } else if (this.state.stateLO == true && this.state.stateLR == true && this.state.stateLE == false) {
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoReciclavel && this.state.pointData[i].lixoOrganico){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    } else if(this.state.stateLR == false &&  this.state.stateLE == true && this.state.stateLO == false) { 
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoEletronico){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    } else if (this.state.stateLR == false &&  this.state.stateLE == false && this.state.stateLO == true) {
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoOrganico){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    } else if (this.state.stateLR == true && this.state.stateLE == false && this.state.stateLO == false) {
-      for(let i = 0; i < this.state.pointData.length; i++){
-        if(this.state.pointData[i].lixoReciclavel){
-          vetorTemp.push(
-            this.state.pointData[i]
-          ) 
-        }
-      }
-    }
-    else {
-      this.getData();
   }
-   this.setState({
-     pointData: vetorTemp
-   })
-  }
+
+  this.setState({
+    pointData: vetorTemp
+  })
+}
 
   pesquisar = (text) => {
     if (text != '') {
@@ -196,7 +159,7 @@ export default class Dashboard extends Component {
         style={styles.fab}
         small
         icon="plus"
-        onPress={() => {     this.filtrar() }}//this.props.navigation.navigate('Adicionar Ponto de Coleta') }}
+        onPress={() => {  this.props.navigation.navigate('Adicionar Ponto de Coleta') }}
       />
     </View>
     }
@@ -237,22 +200,10 @@ export default class Dashboard extends Component {
         </View>
         <View>
           <View
-          style={{
-            borderColor: '#ced4da',
-            borderWidth: 2,
-            borderRadius: 30,
-            backgroundColor: 'rgb(108, 117, 125, 0.4)',
-            position: 'absolute',
-            bottom: 750,
-            left: '5%', 
-            width: '26%',
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={this.state.stateLE ? styles.buttonEnableLE : styles.buttonDisableLE }
           >
             <TouchableOpacity
-        onPress={() => this.selectButton("LE") }
+        onPress={() => this.selectButton('LE') }
         style={{
           width: '100%',
           alignItems: 'center'
@@ -261,19 +212,7 @@ export default class Dashboard extends Component {
           </TouchableOpacity>
           </View>
           <View
-          style={{
-            borderColor: '#ced4da',
-            borderWidth: 2,
-            borderRadius: 30,
-            backgroundColor: 'rgb(108, 117, 125, 0.4)',
-            position: 'absolute',
-            bottom: 750,
-            right: '38%',
-            width: '26%',
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={this.state.stateLR ? styles.buttonEnableLR : styles.buttonDisableLR }
           >
           <TouchableOpacity
                 onPress={()=> {this.selectButton('LR')}}
@@ -286,19 +225,7 @@ export default class Dashboard extends Component {
           </View>
 
           <View
-          style={{
-            borderColor: '#ced4da',
-            borderWidth: 2,
-            borderRadius: 30,
-            backgroundColor: 'rgb(108, 117, 125, 0.4)',
-            position: 'absolute',
-            bottom: 750,
-            right: '5%',
-            width: '28%',
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={this.state.stateLO ? styles.buttonEnableLO : styles.buttonDisableLO }
           >
              <TouchableOpacity
                 onPress={() => {this.selectButton('LO')}}
@@ -384,8 +311,97 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#27AE60'
-  }
+  },
 
+
+
+//////////////////////////////////////////////////
+  buttonDisableLO: {
+      borderColor: '#ced4da',
+      borderWidth: 2,
+      borderRadius: 30,
+      backgroundColor: "rgba(108, 117, 125, 0.1)",
+      position: 'absolute',
+      bottom: 750,
+      right: '5%',
+      width: '28%',
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+},
+
+buttonEnableLO: {
+      borderColor: "rgba(60, 179, 113, 0.6)",
+      borderWidth: 2,
+      borderRadius: 30,
+      backgroundColor:"rgba(60, 179, 113, 0.3)",
+      position: 'absolute',
+      bottom: 750,
+      right: '5%',
+      width: '28%',
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+},
+//////////////////////////////////////////////////
+
+buttonDisableLE: {
+      borderColor: '#ced4da',
+      borderWidth: 2,
+      borderRadius: 30,
+      backgroundColor: "rgba(108, 117, 125, 0.1)",
+      position: 'absolute',
+      bottom: 750,
+      left: '5%', 
+      width: '26%',
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+},
+
+buttonEnableLE: {
+      borderColor: "rgba(60, 179, 113, 0.6)",
+      borderWidth: 2,
+      borderRadius: 30,
+      backgroundColor:"rgba(60, 179, 113, 0.3)",
+      position: 'absolute',
+      bottom: 750,
+      left: '5%', 
+      width: '26%',
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+},
+//////////////////////////////////////////////////
+
+buttonDisableLR: {
+    borderColor: '#ced4da',
+    borderWidth: 2,
+    borderRadius: 30,
+    backgroundColor: "rgba(108, 117, 125, 0.1)",
+    position: 'absolute',
+    bottom: 750,
+    right: '38%',
+    width: '26%',
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
+
+buttonEnableLR: {
+      borderColor: "rgba(60, 179, 113, 0.6)",
+      borderWidth: 2,
+      borderRadius: 30,
+      backgroundColor:"rgba(60, 179, 113, 0.3)",
+      position: 'absolute',
+      bottom: 750,
+      right: '38%',
+      width: '26%',
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+},
+//////////////////////////////////////////////////
 }
 
 )

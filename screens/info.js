@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text, Linking, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { Divider } from 'react-native-paper'
 
 export default function Info() {
     return (
@@ -67,7 +68,6 @@ export default function Info() {
                 Toque no card para saber mais.
                 </Text>
             </TouchableOpacity>
-            
             <TouchableOpacity style={styles.cardInfo}
                 onPress={() => Linking.openURL(`https://ecoassist.com.br/como-e-onde-descartar-seu-lixo-eletronico/`)}
             >
