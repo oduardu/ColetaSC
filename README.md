@@ -16,14 +16,14 @@ ___
 	npm install -g expo-cli
 	npm install --save
 
-##### 3. Configuração do Firebase:
+##### 3. CONFIGURAÇÃO DO BANCO DE DADOS (FIREBASE)
 
 ###### 3.1 Crie um banco de dados no Firebase, no site (https://firebase.google.com/)
 ###### 3.2 Ative o Firestore Database dentro de seu projeto.
 
 ###### 3.3 Ative a autenticação com email e senha.
-###### 3.4 Configuração dentro do projeto
 
+##### 4. CONFIGURAÇÃO DENTRO DO PROJETO
 Crie uma pasta chamada '**config**' em seu projeto, dentro da mesma crie um arquivo com o nome de '**keys.js**' e insira o código abaixo com as **suas chaves do firebase**:
 ```javascript
 export default {
@@ -39,9 +39,9 @@ export default {
  }
 }
 ```
-##### 4. INICIE A APLICAÇÃO UTILIZANDO O EXPO CLI
+##### 5. INICIE A APLICAÇÃO UTILIZANDO O EXPO CLI
 	expo start
-##### 5. ABRA O SEU PROJETO NO SEU SMARTPHONE COM O APLICATIVO EXPO GO
+##### 6. ABRA O PROJETO NO SEU SMARTPHONE COM O APLICATIVO EXPO GO
 > [Expo – Apps on the Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 > 
 > [Expo Go on the App Store](https://apps.apple.com/us/app/expo-go/id982107779)
