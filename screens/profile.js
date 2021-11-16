@@ -93,29 +93,26 @@ export default class Profile extends React.Component {
            </View>
          </View>
          </View>
-         <View style={styles.userInfoSection}>
+         <View style={{padding: 20}}>
          <View style={styles.email}>
 
          <View style={styles.row}>
-           <Icon name="email" color="#27AE60" size={25}/>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.email}</Text >
+           <Icon name="email" color="#27AE60" size={30}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 18}}>{this.state.email}</Text >
          </View>
 
          <View style={styles.row}>
-           <Icon name="account" color="#27AE60" size={25}/>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.tipoConta}</Text >
+           <Icon name="account" color="#27AE60" size={30}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 18}}>{this.state.tipoConta}</Text >
          </View>
          
          <View style={styles.row}>
-           <Icon name="phone" color="#27AE60" size={25}/>
-           <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{this.state.telefone}</MaskedText>
+           <Icon name="phone" color="#27AE60" size={30}/>
+           <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 18}}>{this.state.telefone}</MaskedText>
          </View>
          <View style={{flexDirection: 'row'}}>
-           <Icon name="calendar" color="#27AE60" size={25}/>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>Conta criada em:</Text>
-           </View>
-           <View style={styles.row,{marginLeft: '7.3%'}}>
-           <Text style={{color:"#777777", marginLeft: 10, fontSize: 15}}>{(this.state.data).replace('-','/')}</Text>
+           <Icon name="calendar" color="#27AE60" size={30}/>
+           <Text style={{color:"#777777", marginLeft: 10, fontSize: 18}}>Conta criada em: {(this.state.data).replace('-','/')}</Text>
            </View>
           </View>
           </View>

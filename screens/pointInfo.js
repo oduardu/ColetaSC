@@ -60,72 +60,41 @@ export default class pointInfo extends Component {
         console.log('Sem documentos correspondentes');
         return;
       }
-      else if (doc.data().lixoOrganico === true && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === true) {
-        this.setState({
-          id: doc.id,
-          nome: doc.data().nome,
-          lixoEletronico: doc.data().lixoEletronico,
-          lixoOrganico: doc.data().lixoOrganico,
-          lixoReciclavel: doc.data().lixoReciclavel,
-          tipoResiduo: 'Lixo Orgânico, Lixo Reciclável e Lixo Eletrônico',
-          descricao: doc.data().descricao,
-          latitude: doc.data().localizacao.latitude,
-          longitude: doc.data().localizacao.longitude,
-          idCreator: doc.data().dadosPropretario.id,
-        })
-      } else if (doc.data().lixoEletronico === true) {
-        this.setState({
-          id: doc.id,
-          nome: doc.data().nome,
-          lixoEletronico: doc.data().lixoEletronico,
-          lixoOrganico: doc.data().lixoOrganico,
-          lixoReciclavel: doc.data().lixoReciclavel,
-          tipoResiduo: 'Lixo Eletrônico',
-          descricao: doc.data().descricao,
-          latitude: doc.data().localizacao.latitude,
-          longitude: doc.data().localizacao.longitude,
-          idCreator: doc.data().dadosPropretario.id,
-        })
-      } else if (doc.data().lixoOrganico === true) {
-        this.setState({
-          id: doc.id,
-          nome: doc.data().nome,
-          lixoEletronico: doc.data().lixoEletronico,
-          lixoOrganico: doc.data().lixoOrganico,
-          lixoReciclavel: doc.data().lixoReciclavel,
-          tipoResiduo: 'Lixo Orgânico',
-          descricao: doc.data().descricao,
-          latitude: doc.data().localizacao.latitude,
-          longitude: doc.data().localizacao.longitude,
-          idCreator: doc.data().dadosPropretario.id,
-        })
-      } else if (doc.data().lixoOrganico === false && doc.data().lixoEletronico === false && doc.data().lixoReciclavel === false) {
-        this.setState({
-          id: doc.id,
-          nome: doc.data().nome,
-          lixoEletronico: doc.data().lixoEletronico,
-          lixoOrganico: doc.data().lixoOrganico,
-          lixoReciclavel: doc.data().lixoReciclavel,
-          tipoResiduo: 'Não declarado',
-          descricao: doc.data().descricao,
-          latitude: doc.data().localizacao.latitude,
-          longitude: doc.data().localizacao.longitude,
-          idCreator: doc.data().dadosPropretario.id,
-        })
-      } else if (doc.data().lixoReciclavel === true) {
-        this.setState({
-          id: doc.id,
-          nome: doc.data().nome,
-          latitude: doc.data().localizacao.latitude,
-          lixoEletronico: doc.data().lixoEletronico,
-          lixoOrganico: doc.data().lixoOrganico,
-          lixoReciclavel: doc.data().lixoReciclavel,
-          tipoResiduo: 'Lixo Reciclável',
-          descricao: doc.data().descricao,
-          longitude: doc.data().localizacao.longitude,
-          idCreator: doc.data().dadosPropretario.id,
-        })
+      this.setState({
+        id: doc.id,
+        nome: doc.data().nome,
+        lixoEletronico: doc.data().lixoEletronico,
+        lixoOrganico: doc.data().lixoOrganico,
+        lixoReciclavel: doc.data().lixoReciclavel,
+        descricao: doc.data().descricao,
+        latitude: doc.data().localizacao.latitude,
+        longitude: doc.data().localizacao.longitude,
+        idCreator: doc.data().dadosPropretario.id,
+      })
+      var tResiduo = "";
+
+      if (doc.data().lixoOrganico === true && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === true) {
+          tResiduo = "Lixo Orgânico, Lixo Eletrônico e Lixo Reciclável"
+      } else if(doc.data().lixoOrganico === true && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === false) {
+        tResiduo = "Lixo Orgânico e Lixo Eletrônico"
+
+      } else if(doc.data().lixoOrganico === true && doc.data().lixoEletronico === false && doc.data().lixoReciclavel === true) {
+        tResiduo = "Lixo Orgânico e Lixo Reciclável"
+
+      } else if (doc.data().lixoOrganico === false && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === true) {
+        tResiduo = "Lixo Eletrônico e Lixo Reciclável"
+        
+      } else if (doc.data().lixoOrganico === true && doc.data().lixoEletronico === false && doc.data().lixoReciclavel === false) {
+        tResiduo = "Lixo Orgânico"
+      }else if (doc.data().lixoOrganico === false && doc.data().lixoEletronico === true && doc.data().lixoReciclavel === false) {
+        tResiduo = "Lixo Eletrônico"
+      }else if (doc.data().lixoOrganico === false && doc.data().lixoEletronico === false && doc.data().lixoReciclavel === true) {
+        tResiduo = "Lixo Reciclável"
       }
+      this.setState({
+        tipoResiduo: tResiduo
+      })
+
       this.forceUpdate()
       const pointRefPropretario = db.collection('users').doc(this.state.idCreator);
       pointRefPropretario.get().then((doc) => {
