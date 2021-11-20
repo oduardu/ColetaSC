@@ -5,6 +5,7 @@ import { View,Image,StyleSheet, TouchableOpacity,Text,NetInfo,StackNavigator,Ima
 import { createStackNavigator } from '@react-navigation/stack';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import { LogBox } from 'react-native';
 import apiKeys from './config/keys';
 
 import SignUp from './screens/Authentication/SignUp'
@@ -19,14 +20,16 @@ import addCellectPoint from './screens/addCollectPoint'
 import pointList from './screens/pointList'
 import pointInfo from './screens/pointInfo'
 
+
 const Stack = createStackNavigator()
 
 export default function App() {
   if (!firebase.apps.length) {
     console.log('Conectado com o Firebase...')
     firebase.initializeApp(apiKeys.firebaseConfig);
+    LogBox.ignoreAllLogs();
+    console.disableYellowBox = true;
   }
-
   return (
     <NavigationContainer>
       <Stack.Navigator>

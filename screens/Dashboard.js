@@ -5,6 +5,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default class Dashboard extends Component {
@@ -21,11 +22,14 @@ export default class Dashboard extends Component {
       search: null,
       stateLE: true,
       stateLR: true,
-      stateLO: true
+      stateLO: true,
+      latitudeP: 13.6515124,
+      longitudeP: -69.7910688
     }
   }
 
   async componentDidMount() {
+    Location.requestForegroundPermissionsAsync()
     const location = await Location.getCurrentPositionAsync()
     this.setState({
       latitude: location.coords.latitude,
@@ -150,7 +154,7 @@ export default class Dashboard extends Component {
   };
 
   render() {
-    
+
     const contaEmpresa = this.state.empresa
     let fabButton
     if(contaEmpresa == true){

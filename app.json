@@ -1,14 +1,17 @@
 {
   "expo": {
     "name": "ColetaSC",
-    "slug": "snack-fa10faad-b359-42e0-82ea-83117b5faa41",
+    "slug": "ColetaSC",
     "version": "1.0.0",
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#27AE60"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,13 +20,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "br.edu.ifsc.coletasc" 
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#27AE60"
+      },
+      "package": "br.edu.ifsc.coletasc"
     },
     "web": {
       "favicon": "./assets/favicon.png"

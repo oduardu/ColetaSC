@@ -410,7 +410,7 @@ export default class pointInfo extends Component {
             <View style={styles.row}>
               <Icon name="phone" color="#27AE60" size={25} />
 
-              <MaskedText mask="(+99) 999999999" style={{ color: "#777777", marginLeft: 10, fontSize: 15 }}>{this.state.telefone}</MaskedText>
+              <MaskedText mask="(99) 999999999" style={{ color: "#777777", marginLeft: 10, fontSize: 15 }}>{this.state.telefone}</MaskedText>
             </View>
           </View>
         </View>

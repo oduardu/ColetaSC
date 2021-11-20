@@ -125,46 +125,6 @@ export default class pointList extends React.Component {
 
     }
 
-        rightActions = (progress, dragX, vetorPoint) => {
-            const scale = dragX.interpolate({
-                inputRange: [-100, 0],
-                outputRange: [0.7, 0]
-            })
-
-            return (
-                <>
-                    <TouchableOpacity
-                        onPress={() => {
-                            Alert.alert(
-                                "Remover ponto",
-                                "Deseja realmente remover o ponto?",
-                                [
-                                    {
-                                        text: "Cancelar",
-                                        onPress: () => console.log("Cancel Pressed"),
-                                        style: "cancel"
-                                    },
-                                    { text: "OK", onPress: () => this.remover(vetorPoint.id) }
-                                ]
-                            );
-                        }
-                        }
-                    >
-                        <View style={{ flex: 1, backgroundColor: 'red', justifyContent: 'center', borderRadius: 30, marginBottom: 20 }}>
-                            <Animated.Text
-                                style={{
-                                    color: 'white',
-                                    paddingHorizontal: 10,
-                                    fontWeight: '600',
-                                    transform: [{ scale }]
-                                }}>
-                                Deletar
-                        </Animated.Text>
-                        </View>
-                    </TouchableOpacity>
-                </>
-            )
-        }
     
     render() {
 
@@ -220,8 +180,6 @@ export default class pointList extends React.Component {
                                    </TouchableOpacity>
                                 </>
                             ))}
-                        {/*<Card.Content>
-                    </Card>*/}
                         </List.Section>
 
             </View>

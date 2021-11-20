@@ -108,7 +108,7 @@ export default class Profile extends React.Component {
          
          <View style={styles.row}>
            <Icon name="phone" color="#27AE60" size={30}/>
-           <MaskedText  mask="(+99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 18}}>{this.state.telefone}</MaskedText>
+           <MaskedText  mask="(99) 999999999" style={{color:"#777777", marginLeft: 10, fontSize: 18}}>{this.state.telefone}</MaskedText>
          </View>
          <View style={{flexDirection: 'row'}}>
            <Icon name="calendar" color="#27AE60" size={30}/>

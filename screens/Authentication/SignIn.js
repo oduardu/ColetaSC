@@ -10,6 +10,7 @@ export default function SignIn() {
   const [visible, setVisible] = useState(false)
   const onToggleSnackBar = () => setVisible(!visible)
   const onDismissSnackBar = () => setVisible(false)
+  const [loading, setLoading] = useState(false)
 
   const [errortype, setErrortype] = useState('')
   const [email, setEmail] = useState('');
@@ -26,6 +27,7 @@ export default function SignIn() {
     }
 
     signIn(email, password);
+    setLoading(true)
     setEmail('');
     setPassword('');
     navigation.navigate('Loading');
@@ -33,7 +35,7 @@ export default function SignIn() {
 
   return (
     <View style={styles.container}>
-      <View>
+       <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Image style={styles.icon} source={require('../../assets/logo.png')}></Image>
         </View>
     <View>
@@ -69,8 +71,6 @@ export default function SignIn() {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Sign Up')} >
        <Text style={styles.buttonText}>Cadastrar-se</Text>
       </TouchableOpacity>
-
-      <Text style={styles.inlineText}>Recuperar Senha...</Text>
 
       <Snackbar visible={visible}
       onDismiss={onDismissSnackBar}
@@ -111,8 +111,9 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: 350,
-    height: 100,
+    width: 400,
+    height: 80,
+    marginBottom: '20%'
   },
 
   container: {
