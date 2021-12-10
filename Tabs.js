@@ -29,46 +29,25 @@ export default function Tabs() {
             }
         }}
         >
-                <Tab.Screen name="Profile" component={Profile} 
-                options={{
-                  tabBarIcon: ({focused}) =>  (
-                    <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                        <Image
-                        source={require('./assets/profile.png')}
-                        resizeMode='contain'
-                        style={{
-                            width: 30,
-                            height: 30,
-                            tintColor: focused ? '#27AE60' : '#616161'
-                        }}
-                        />
-                        <Text
-                        style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
-                        >PERFIL</Text>
-                    </View>
-                  )
-                }}                
-                />
-
-                <Tab.Screen name="Dashboard" component={Dashboard} 
-                    options={{
-                  tabBarIcon: ({focused}) =>  (
-                    <View style={{alignItems: 'center', justifyContent: 'center', }}>
-                        <Image
-                        source={require('./assets/map.png')}
-                        resizeMode='contain'
-                        style={{
-                            width: 25,
-                            height: 25,
-                            tintColor: focused ? '#27AE60' : '#616161',
-                        }}
-                        />
-                        <Text
-                        style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
-                        >MAPA</Text>
-                    </View>
-                  )
-                }}                
+            <Tab.Screen name="Dashboard" component={Dashboard} 
+                      options={{
+                    tabBarIcon: ({focused}) =>  (
+                      <View style={{alignItems: 'center', justifyContent: 'center', }}>
+                          <Image
+                          source={require('./assets/map.png')}
+                          resizeMode='contain'
+                          style={{
+                              width: 25,
+                              height: 25,
+                              tintColor: focused ? '#27AE60' : '#616161',
+                          }}
+                          />
+                          <Text
+                          style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
+                          >MAPA</Text>
+                      </View>
+                    )
+                  }}                
                 />
                 <Tab.Screen name="Settings" component={pointList}
                   options={{
@@ -106,6 +85,28 @@ export default function Tabs() {
                         <Text
                         style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
                         >INFO</Text>
+                    </View>
+                  )
+                }}                
+                />
+
+                <Tab.Screen name="Profile" component={Profile} 
+                options={{
+                  tabBarIcon: ({focused}) =>  (
+                    
+                    <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                        <Image
+                        source={require('./assets/profile.png')}
+                        resizeMode='contain'
+                        style={{
+                            width: 30,
+                            height: 30,
+                            tintColor: focused ? '#27AE60' : '#616161'
+                        }}
+                        />
+                        <Text
+                        style={{color: focused ? '#27AE60' : '#616161', fontSize: 10}}
+                        >PERFIL</Text>
                     </View>
                   )
                 }}                
