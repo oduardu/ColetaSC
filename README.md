@@ -4,7 +4,7 @@
 
 O aplicativo ColetaSC foi desenvolvido como um projeto de graduação do ensino médio por alunos do Instituto Federal de Santa Catarina. A ideia do projeto consiste em um mapa que mostrará ao usuário onde ele pode fazer o descarte correto de seus resíduos, sejam orgânicos, recicláveis ou eletrônicos.
 
-O projeto foi desenvolvido ao longo de 2021, com base nas aulas ministradas pela Rocketseat, além dos conhecimentos adquiridos nas aulas do instituto.
+O projeto foi desenvolvido ao longo de 2021, com base nas aulas ministradas pela <a href="https://github.com/Rocketseat">@Rocketseat</a>, além dos conhecimentos adquiridos nas aulas do instituto.
 
 O projeto foi desenvolvido pelos alunos: Eduardo Pazzini Zancanaro, Filipe Medeiros de Almeida, Leonardo Moreschi e Vitor Albara, tendo como orientadores os professores Jackson Meires e Luciane Belmonte
 ___
